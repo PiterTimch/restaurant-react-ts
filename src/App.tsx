@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Routes} from "react-router";
 import Home from "./pages/Dashboard/Home.tsx";
 import AdminLayout from "./layout/AdminLayout.tsx";
 import NotFound from "./pages/OtherPage/NotFound.tsx";
+import CategoriesListPage from "./pages/Categories";
 
 const App: React.FC = () => {
     console.log("App rendered");
@@ -15,6 +16,10 @@ const App: React.FC = () => {
 
                 <Route path={"admin"} element={<AdminLayout />}>
                     <Route path="home" element={<Home />}/>
+
+                    <Route path="categories">
+                        <Route index  element={<CategoriesListPage />} />
+                    </Route>
                 </Route>
 
                 <Route path="*" element={<NotFound />} />
