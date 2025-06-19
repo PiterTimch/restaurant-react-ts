@@ -29,7 +29,7 @@ const LayoutContent: React.FC = () => {
     );
 };
 
-const AppLayout: React.FC = () => {
+const AdminLayout: React.FC = () => {
     return (
         <SidebarProvider>
             <LayoutContent />
@@ -37,4 +37,4 @@ const AppLayout: React.FC = () => {
     );
 };
 
-export default AppLayout;
+export default AdminLayout;

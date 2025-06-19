@@ -6,7 +6,7 @@ import StatisticsChart from "../../components/ecommerce/StatisticsChart.tsx";
 import DemographicCard from "../../components/ecommerce/DemographicCard.tsx";
 import RecentOrders from "../../components/ecommerce/RecentOrders.tsx";
 
-export default function Home() {
+export default function DashboardHome() {
     return (
         <>
             <PageMeta
