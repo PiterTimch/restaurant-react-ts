@@ -12,3 +12,8 @@ export interface ICategoryCreate
     slug: string;
     imageFile: string;
 }
+
+export interface ICategoryDelete
+{
+    id: number;
+}
