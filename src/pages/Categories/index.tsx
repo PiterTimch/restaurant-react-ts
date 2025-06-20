@@ -7,6 +7,8 @@ import {
     TableRow,
 } from "../../components/ui/table";
 import {APP_ENV} from "../../env";
+import {Link} from "react-router";
+import {BoxIcon} from "../../icons";
 
 const CategoriesListPage: React.FC = () => {
 
@@ -21,11 +23,23 @@ const CategoriesListPage: React.FC = () => {
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
                     Categories
                 </h3>
+
                 <div className="flex items-center gap-3">
                     <button className="btn">Filter</button>
                     <button className="btn">See all</button>
                 </div>
             </div>
+
+            <Link
+                to="create"
+                className="inline-flex items-center
+                gap-2 px-4 py-2 bg-white text-black text-sm
+                font-medium rounded-lg shadow-md
+                hover:bg-green-400 transition mb-3"
+            >
+                <BoxIcon className="text-black w-5 h-5" />
+                Додати
+            </Link>
 
             <div className="max-w-full overflow-x-auto">
                 <Table>

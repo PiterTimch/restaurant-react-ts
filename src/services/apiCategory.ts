@@ -7,26 +7,29 @@ import {serialize} from "object-to-formdata";
 export const apiCategory = createApi({
     reducerPath: 'api',
     baseQuery: createBaseQuery('Categories'),
+    tagTypes: ['Category'],
     endpoints: (builder) => ({
         getAllCategories: builder.query<ICategoryItem[], void>({
-            query: () => 'list'
+            query: () => 'list',
+            providesTags: ['Category'],
         }),
         createCategory: builder.mutation<ICategoryItem, ICategoryCreate>({
-            query: (newCategory) =>{
+            query: (newCategory) => {
                 try {
                     const formData = serialize(newCategory);
-                    return{
+                    return {
                         url: 'create',
                         method: 'POST',
-                        body: formData
-                    }
-                }
-                catch {
+                        body: formData,
+                    };
+                } catch {
                     throw new Error('Error create category');
                 }
-            }
-        })
-    })
+            },
+            invalidatesTags: ['Category'],
+        }),
+    }),
 });
+
 
 export const {useGetAllCategoriesQuery, useCreateCategoryMutation} = apiCategory;
