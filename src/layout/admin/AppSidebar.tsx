@@ -10,8 +10,8 @@ import {
     PlugInIcon,
     TableIcon,
     UserIcon
-} from "../icons";
-import { useSidebar } from "../context/SidebarContext";
+} from "../../icons";
+import { useSidebar } from "../../context/SidebarContext.tsx";
 
 type NavItem = {
     name: string;

@@ -1,5 +1,5 @@
 import AppSidebar from "./AppSidebar.tsx";
-import {SidebarProvider, useSidebar} from "../context/SidebarContext.tsx";
+import {SidebarProvider, useSidebar} from "../../context/SidebarContext.tsx";
 import {Outlet} from "react-router";
 import Backdrop from "./Backdrop.tsx";
 import AppHeader from "./AppHeader.tsx";

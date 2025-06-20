@@ -1,11 +1,12 @@
 import './App.css'
 import {BrowserRouter as Router, Route, Routes} from "react-router";
 import DashboardHome from "./pages/Dashboard/DashboardHome.tsx";
-import AdminLayout from "./layout/AdminLayout.tsx";
+import AdminLayout from "./layout/admin/AdminLayout.tsx";
 import NotFound from "./pages/OtherPage/NotFound.tsx";
 import CategoriesListPage from "./pages/Categories";
-import UserLayout from "./layout/UserLayout.tsx";
+import UserLayout from "./layout/user/UserLayout.tsx";
 import UserHomePage from "./pages/OtherPage/UserHomePage.tsx";
+import CategoriesCreatePage from "./pages/Categories/create";
 
 const App: React.FC = () => {
     console.log("App rendered");
@@ -26,6 +27,7 @@ const App: React.FC = () => {
 
                     <Route path="categories">
                         <Route index  element={<CategoriesListPage />} />
+                        <Route path='create' element={<CategoriesCreatePage />} />
                     </Route>
                 </Route>
 
