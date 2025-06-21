@@ -29,7 +29,7 @@ const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
             }
 
             setPreviewUrl(URL.createObjectURL(file));
-            return false; // блок автоаплоаду
+            return false;
         },
         showUploadList: false,
     };

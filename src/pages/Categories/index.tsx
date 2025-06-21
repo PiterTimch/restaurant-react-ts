@@ -6,24 +6,21 @@ import {
     TableHeader,
     TableRow,
 } from "../../components/ui/table";
-import {APP_ENV} from "../../env";
 import {Link} from "react-router";
 import {BoxIcon} from "../../icons";
-import {Button, message} from "antd";
-import {CloseCircleFilled} from "@ant-design/icons";
-import {useState} from "react";
+import CategoryTableItem from "../../components/ui/table/item/CategoryTableItem.tsx";
 import ConfirmDialog from "../../components/ui/form/ConfirmDialogProps.tsx";
+import {useState} from "react";
+import {message} from "antd";
 
 const CategoriesListPage: React.FC = () => {
 
     const { data: categories, isLoading, isError } = useGetAllCategoriesQuery();
+
     const [deleteCategory] = useDeleteCategoryMutation();
 
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [deleteId, setDeleteId] = useState<number | null>(null);
-
-    if (isLoading) return <p>Loading...</p>;
-    if (isError || !categories) return <p>Something went wrong.</p>;
 
     const onDeleteBtnClick = (id: number) => {
         setDeleteId(id);
@@ -48,6 +45,9 @@ const CategoriesListPage: React.FC = () => {
         setConfirmOpen(false);
         setDeleteId(null);
     };
+
+    if (isLoading) return <p>Loading...</p>;
+    if (isError || !categories) return <p>Something went wrong.</p>;
 
     return (
         <>
@@ -87,36 +87,11 @@ const CategoriesListPage: React.FC = () => {
 
                         <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
                             {categories.map((category) => (
-                                <TableRow key={category.id}>
-                                    <TableCell className="py-3 font-medium text-gray-800 dark:text-white/90">
-                                        {category.name}
-                                    </TableCell>
-
-                                    <TableCell className="py-3 text-gray-500 dark:text-gray-400">
-                                        {category.slug}
-                                    </TableCell>
-
-                                    <TableCell className="py-3">
-                                        <div className="h-[50px] w-[50px] overflow-hidden rounded-md">
-                                            <img
-                                                src={`${APP_ENV.IMAGES_100_URL}${category.image}`}
-                                                alt={category.name}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        </div>
-                                    </TableCell>
-
-                                    <TableCell className="py-3">
-                                        <Button onClick={() => onDeleteBtnClick(category.id)}>
-                                            <CloseCircleFilled className="text-xl" />
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
+                                <CategoryTableItem cat={category} onDelete={onDeleteBtnClick} />
                             ))}
                         </TableBody>
                     </Table>
                 </div>
-
             </div>
 
             <ConfirmDialog

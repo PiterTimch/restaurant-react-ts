@@ -17,3 +17,10 @@ export interface ICategoryDelete
 {
     id: number;
 }
+
+export interface ServerError {
+    status: number;
+    data: {
+        errors: Record<string, string[]>;
+    };
+}

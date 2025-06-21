@@ -1,9 +1,10 @@
 import {Button, Form, type FormProps, Input, message} from "antd";
-import type {ICategoryCreate} from "../../../services/types.ts";
+import type {ICategoryCreate, ServerError} from "../../../services/types.ts";
 import ImageUploadFormItem from "../../../components/ui/form/ImageUploadFormItem.tsx";
 import {useCreateCategoryMutation} from "../../../services/apiCategory.ts";
 import {useNavigate} from "react-router";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
+import { useFormServerErrors } from "../../../utilities/useFormServerErrors.tsx";
 
 const CategoriesCreatePage: React.FC = () => {
 
@@ -11,13 +12,23 @@ const CategoriesCreatePage: React.FC = () => {
 
     const [createCategory, {isLoading}] = useCreateCategoryMutation();
 
+    const [form] = Form.useForm<ICategoryCreate>();
+    const setServerErrors = useFormServerErrors(form);
+
     const onFinish: FormProps<ICategoryCreate>['onFinish'] = async (values) => {
-        console.log('Submit Form:', values);
+        try {
+            const result = await createCategory(values).unwrap();
+            message.success(`Категорія "${result.name}" створена успішно`);
+            navigate('/admin/categories');
+        } catch (error) {
+            const serverError = error as ServerError;
 
-        const result = await createCategory(values).unwrap();
-        message.success(`Категорія "${result.name}" створена успішно`);
-
-        navigate('/admin/categories');
+            if (serverError?.status === 400 && serverError?.data?.errors) {
+                setServerErrors(serverError.data.errors);
+            } else {
+                message.error("Сталася помилка при створенні категорії");
+            }
+        }
     };
 
     return (
@@ -26,6 +37,7 @@ const CategoriesCreatePage: React.FC = () => {
             <div className="max-w-full overflow-x-auto">
                 <h1>Додати категорію</h1>
                 <Form
+                    form={form}
                     labelCol={{ span: 6 }}
                     wrapperCol={{ span: 18 }}
                     onFinish={onFinish}
