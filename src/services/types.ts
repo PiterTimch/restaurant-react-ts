@@ -13,6 +13,14 @@ export interface ICategoryCreate
     imageFile: string;
 }
 
+export interface ICategoryEdit
+{
+    id: number;
+    name: string;
+    slug: string;
+    imageFile: string;
+}
+
 export interface ICategoryDelete
 {
     id: number;

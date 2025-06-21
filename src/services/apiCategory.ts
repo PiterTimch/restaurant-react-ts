@@ -1,5 +1,5 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
-import type {ICategoryCreate, ICategoryDelete, ICategoryItem} from "./types.ts";
+import type {ICategoryCreate, ICategoryDelete, ICategoryEdit, ICategoryItem} from "./types.ts";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
 import {serialize} from "object-to-formdata";
 
@@ -13,6 +13,9 @@ export const apiCategory = createApi({
             query: () => 'list',
             providesTags: ['Category'],
         }),
+        getCategoryBySlug: builder.query<ICategoryItem, string>({
+            query: (slug) => `${slug}`
+        }),
         createCategory: builder.mutation<ICategoryItem, ICategoryCreate>({
             query: (newCategory) => {
                 try {
@@ -24,6 +27,21 @@ export const apiCategory = createApi({
                     };
                 } catch {
                     throw new Error('Error create category');
+                }
+            },
+            invalidatesTags: ['Category'],
+        }),
+        editCategory: builder.mutation<ICategoryItem, ICategoryEdit>({
+            query: (newCategory) => {
+                try {
+                    const formData = serialize(newCategory);
+                    return {
+                        url: 'update',
+                        method: 'PUT',
+                        body: formData,
+                    };
+                } catch {
+                    throw new Error('Error edit category');
                 }
             },
             invalidatesTags: ['Category'],
@@ -46,4 +64,4 @@ export const apiCategory = createApi({
 });
 
 
-export const {useGetAllCategoriesQuery, useCreateCategoryMutation, useDeleteCategoryMutation} = apiCategory;
+export const {useGetAllCategoriesQuery, useCreateCategoryMutation, useDeleteCategoryMutation, useEditCategoryMutation, useGetCategoryBySlugQuery} = apiCategory;

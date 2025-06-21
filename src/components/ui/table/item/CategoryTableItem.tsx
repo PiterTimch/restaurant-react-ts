@@ -1,8 +1,9 @@
 import {TableCell, TableRow} from "../index.tsx";
 import {APP_ENV} from "../../../../env";
-import {Button} from "antd";
-import {CloseCircleFilled} from "@ant-design/icons";
+import {Button, Space} from "antd";
+import {CloseCircleFilled, EditOutlined} from "@ant-design/icons";
 import type {ICategoryItem} from "../../../../services/types.ts";
+import {Link} from "react-router";
 
 interface CategoryTableItemProps {
     cat: ICategoryItem;
@@ -34,9 +35,13 @@ const CategoryTableItem: React.FC<CategoryTableItemProps> = ({
                 </TableCell>
 
                 <TableCell className="py-3">
-                    <Button onClick={() => onDelete(cat.id)}>
-                        <CloseCircleFilled className="text-xl" />
-                    </Button>
+                    <Space size="middle">
+                        <Link to={`/admin/categories/edit/${cat.slug}`}>
+                            <Button icon={<EditOutlined />} />
+                        </Link>
+
+                        <Button danger icon={<CloseCircleFilled />} onClick={() => onDelete(cat.id)} />
+                    </Space>
                 </TableCell>
             </TableRow>
         </>
