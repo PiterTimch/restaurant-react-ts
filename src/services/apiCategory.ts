@@ -5,7 +5,7 @@ import {serialize} from "object-to-formdata";
 
 
 export const apiCategory = createApi({
-    reducerPath: 'api',
+    reducerPath: 'api/categories',
     baseQuery: createBaseQuery('Categories'),
     tagTypes: ['Category', 'Categories'],
     endpoints: (builder) => ({

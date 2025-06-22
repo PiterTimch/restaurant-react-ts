@@ -3,12 +3,11 @@ import {useGetAllCategoriesQuery} from "../../services/apiCategory.ts";
 import {APP_ENV} from "../../env";
 
 const UserHomePage: React.FC = () => {
-    // Отримуємо категорії з API
+
     const { data: categories, error, isLoading } = useGetAllCategoriesQuery();
 
     return (
         <div className="min-h-screen bg-white dark:bg-gray-900">
-            {/* Hero Section */}
             <section className="px-6 pt-20 pb-32 text-center bg-gradient-to-b from-orange-50 to-white dark:from-gray-800 dark:to-gray-900">
                 <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
                     Смачна доставка — просто додому
@@ -60,7 +59,6 @@ const UserHomePage: React.FC = () => {
                 )}
             </section>
 
-            {/* Promo Section */}
             <section className="mt-24 px-6 py-16 bg-orange-50 dark:bg-gray-800 text-center">
                 <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
                     Знижка 10% на перше замовлення!
