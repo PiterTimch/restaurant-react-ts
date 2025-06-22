@@ -4,7 +4,7 @@ import ImageUploadFormItem from "../../../components/ui/form/ImageUploadFormItem
 import {useCreateCategoryMutation} from "../../../services/apiCategory.ts";
 import {useNavigate} from "react-router";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import { useFormServerErrors } from "../../../utilities/useFormServerErrors.tsx";
+import { useFormServerErrors } from "../../../utilities/useFormServerErrors.ts";
 
 const CategoriesCreatePage: React.FC = () => {
 

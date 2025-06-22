@@ -9,45 +9,23 @@ import {
 import {Link} from "react-router";
 import {BoxIcon} from "../../icons";
 import CategoryTableItem from "../../components/ui/table/item/CategoryTableItem.tsx";
-import ConfirmDialog from "../../components/ui/form/ConfirmDialogProps.tsx";
-import {useState} from "react";
-import {message} from "antd";
+import {useRef} from "react";
+import DeleteConfirmModal, {type DeleteConfirmModalRef} from "../../components/common/DeleteConfirmModal.tsx";
 
 const CategoriesListPage: React.FC = () => {
 
     const { data: categories, isLoading, isError } = useGetAllCategoriesQuery();
 
-    const [deleteCategory] = useDeleteCategoryMutation();
+    const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoryMutation();
 
-    const [confirmOpen, setConfirmOpen] = useState(false);
-    const [deleteId, setDeleteId] = useState<number | null>(null);
-
-    const onDeleteBtnClick = (id: number) => {
-        setDeleteId(id);
-        setConfirmOpen(true);
-    };
-
-    const handleConfirmDelete = async () => {
-        if (deleteId === null) return;
-
-        try {
-            await deleteCategory({ id: deleteId }).unwrap();
-            message.success("Категорію успішно видалено");
-        } catch {
-            message.error("Не вдалося видалити категорію");
-        } finally {
-            setConfirmOpen(false);
-            setDeleteId(null);
-        }
-    };
-
-    const handleCancelDelete = () => {
-        setConfirmOpen(false);
-        setDeleteId(null);
-    };
+    const modalRef = useRef<DeleteConfirmModalRef>(null);
 
     if (isLoading) return <p>Loading...</p>;
     if (isError || !categories) return <p>Something went wrong.</p>;
+
+    const handleDelete = async (id: number) => {
+        await deleteCategory({id: id});
+    };
 
     return (
         <>
@@ -87,20 +65,14 @@ const CategoriesListPage: React.FC = () => {
 
                         <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
                             {categories.map((category) => (
-                                <CategoryTableItem cat={category} onDelete={onDeleteBtnClick} />
+                                <CategoryTableItem cat={category} refModal={modalRef} />
                             ))}
                         </TableBody>
                     </Table>
                 </div>
             </div>
 
-            <ConfirmDialog
-                open={confirmOpen}
-                onConfirm={handleConfirmDelete}
-                onCancel={handleCancelDelete}
-                title="Видалення категорії"
-                description="Ви впевнені, що хочете видалити категорію?"
-            />
+            <DeleteConfirmModal ref={modalRef} onDelete={handleDelete} loading={isDeleting} />
         </>
     );
 }

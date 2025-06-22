@@ -7,14 +7,15 @@ import {serialize} from "object-to-formdata";
 export const apiCategory = createApi({
     reducerPath: 'api',
     baseQuery: createBaseQuery('Categories'),
-    tagTypes: ['Category'],
+    tagTypes: ['Category', 'Categories'],
     endpoints: (builder) => ({
         getAllCategories: builder.query<ICategoryItem[], void>({
             query: () => 'list',
-            providesTags: ['Category'],
+            providesTags: ['Categories'],
         }),
         getCategoryBySlug: builder.query<ICategoryItem, string>({
-            query: (slug) => `${slug}`
+            query: (slug) => `${slug}`,
+            providesTags: ['Category'],
         }),
         createCategory: builder.mutation<ICategoryItem, ICategoryCreate>({
             query: (newCategory) => {
@@ -29,7 +30,7 @@ export const apiCategory = createApi({
                     throw new Error('Error create category');
                 }
             },
-            invalidatesTags: ['Category'],
+            invalidatesTags: ['Categories'],
         }),
         editCategory: builder.mutation<ICategoryItem, ICategoryEdit>({
             query: (newCategory) => {
@@ -44,7 +45,7 @@ export const apiCategory = createApi({
                     throw new Error('Error edit category');
                 }
             },
-            invalidatesTags: ['Category'],
+            invalidatesTags: ['Categories', 'Category'],
         }),
         deleteCategory: builder.mutation<void, ICategoryDelete>({
             query: (deleteCategory) => {
@@ -58,10 +59,16 @@ export const apiCategory = createApi({
                     throw new Error('Error delete category');
                 }
             },
-            invalidatesTags: ['Category'],
+            invalidatesTags: ['Categories'],
         }),
     }),
 });
 
 
-export const {useGetAllCategoriesQuery, useCreateCategoryMutation, useDeleteCategoryMutation, useEditCategoryMutation, useGetCategoryBySlugQuery} = apiCategory;
+export const {
+    useGetAllCategoriesQuery,
+    useCreateCategoryMutation,
+    useDeleteCategoryMutation,
+    useEditCategoryMutation,
+    useGetCategoryBySlugQuery
+} = apiCategory;

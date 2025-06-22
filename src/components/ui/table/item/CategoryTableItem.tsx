@@ -4,14 +4,15 @@ import {Button, Space} from "antd";
 import {CloseCircleFilled, EditOutlined} from "@ant-design/icons";
 import type {ICategoryItem} from "../../../../services/types.ts";
 import {Link} from "react-router";
+import type {DeleteConfirmModalRef} from "../../../common/DeleteConfirmModal.tsx";
 
 interface CategoryTableItemProps {
     cat: ICategoryItem;
-    onDelete: (id: number) => void;
+    refModal:  React.RefObject<DeleteConfirmModalRef | null>;
 }
 
 const CategoryTableItem: React.FC<CategoryTableItemProps> = ({
-                                                                 cat,  onDelete
+                                                                 cat, refModal
                                      }) => {
     return(
         <>
@@ -40,7 +41,7 @@ const CategoryTableItem: React.FC<CategoryTableItemProps> = ({
                             <Button icon={<EditOutlined />} />
                         </Link>
 
-                        <Button danger icon={<CloseCircleFilled />} onClick={() => onDelete(cat.id)} />
+                        <Button danger icon={<CloseCircleFilled />} onClick={() => refModal.current?.open(cat.id)} />
                     </Space>
                 </TableCell>
             </TableRow>

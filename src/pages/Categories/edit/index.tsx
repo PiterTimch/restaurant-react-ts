@@ -4,36 +4,19 @@ import ImageUploadFormItem from "../../../components/ui/form/ImageUploadFormItem
 import { useEditCategoryMutation, useGetCategoryBySlugQuery } from "../../../services/apiCategory.ts";
 import { useNavigate, useParams } from "react-router";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import { useFormServerErrors } from "../../../utilities/useFormServerErrors.tsx";
-import { useEffect } from "react";
+import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 
 const CategoriesEditPage: React.FC = () => {
     const navigate = useNavigate();
     const params = useParams<{ slug: string }>();
     const slug = params.slug || "";
 
-    const { data: category, isLoading: isLoadingCategory, isError: isErrorCategory, refetch } = useGetCategoryBySlugQuery(slug);
+    const { data: category, isLoading: isLoadingCategory, isError: isErrorCategory } = useGetCategoryBySlugQuery(slug);
 
     const [editCategory, { isLoading: isLoadingEdit }] = useEditCategoryMutation();
 
     const [form] = Form.useForm<ICategoryEdit>();
     const setServerErrors = useFormServerErrors(form);
-
-    useEffect(() => {
-        if (slug) {
-            refetch();
-        }
-    }, [slug, refetch]);
-
-    useEffect(() => {
-        if (category) {
-            form.setFieldsValue({
-                id: category.id,
-                name: category.name,
-                slug: category.slug,
-            });
-        }
-    }, [category, form]);
 
     const onFinish: FormProps<ICategoryEdit>['onFinish'] = async (values) => {
         try {
@@ -61,6 +44,7 @@ const CategoriesEditPage: React.FC = () => {
                 <h1>Редагувати категорію</h1>
                 <Form
                     form={form}
+                    initialValues={category}
                     labelCol={{ span: 6 }}
                     wrapperCol={{ span: 18 }}
                     onFinish={onFinish}
