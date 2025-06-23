@@ -9,6 +9,7 @@ import UserHomePage from "./pages/OtherPage/UserHomePage.tsx";
 import CategoriesCreatePage from "./pages/Categories/create";
 import CategoriesEditPage from "./pages/Categories/edit";
 import LoginPage from "./pages/Account/login";
+import RegistrationPage from "./pages/Account/register";
 
 const App: React.FC = () => {
     console.log("App rendered");
@@ -23,6 +24,7 @@ const App: React.FC = () => {
                     <Route index element={<UserHomePage />} />
 
                     <Route path="login" element={<LoginPage />} />
+                    <Route path="registration" element={<RegistrationPage />} />
                 </Route>
 
 

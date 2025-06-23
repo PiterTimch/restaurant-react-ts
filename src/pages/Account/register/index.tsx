@@ -1,22 +1,23 @@
 import {useNavigate} from "react-router";
 import {Button, Form, type FormProps, Input, message} from "antd";
-import type {ILogin, ServerError} from "../../../services/types.ts";
+import type {IRegister, ServerError} from "../../../services/types.ts";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import {useLoginMutation} from "../../../services/apiAccount.ts";
+import {useRegisterMutation} from "../../../services/apiAccount.ts";
+import ImageUploadFormItem from "../../../components/ui/form/ImageUploadFormItem.tsx";
 
-const LoginPage: React.FC = () => {
+const RegistrationPage: React.FC = () => {
 
     const navigate = useNavigate();
 
-    const [login, {isLoading}] = useLoginMutation();
+    const [register, {isLoading}] = useRegisterMutation();
 
-    const [form] = Form.useForm<ILogin>();
+    const [form] = Form.useForm<IRegister>();
     const setServerErrors = useFormServerErrors(form);
 
-    const onFinish: FormProps<ILogin>['onFinish'] = async (values) => {
+    const onFinish: FormProps<IRegister>['onFinish'] = async (values) => {
         try {
-            await login(values).unwrap();
+            await register(values).unwrap();
             navigate('/');
         } catch (error) {
             const serverError = error as ServerError;
@@ -31,10 +32,10 @@ const LoginPage: React.FC = () => {
 
     return (
         <div className="min-h-[80vh] flex items-center justify-center px-4">
-        <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-800 animate-fade-in">
+            <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-800 animate-fade-in">
                 {isLoading && <LoadingOverlay />}
 
-                <h2 className="text-2xl font-semibold text-center text-orange-500 mb-6">Вхід в акаунт</h2>
+                <h2 className="text-2xl font-semibold text-center text-orange-500 mb-6">Реєстрація</h2>
 
                 <Form
                     form={form}
@@ -42,7 +43,7 @@ const LoginPage: React.FC = () => {
                     onFinish={onFinish}
                     className="space-y-4"
                 >
-                    <Form.Item<ILogin>
+                    <Form.Item<IRegister>
                         label={<span className="text-gray-700 dark:text-white font-medium">Email</span>}
                         name="email"
                         rules={[{ required: true, message: 'Вкажіть email' }]}
@@ -52,7 +53,27 @@ const LoginPage: React.FC = () => {
                         />
                     </Form.Item>
 
-                    <Form.Item<ILogin>
+                    <Form.Item<IRegister>
+                        label={<span className="text-gray-700 dark:text-white font-medium">Ім'я</span>}
+                        name="firstName"
+                        rules={[{ required: true, message: 'Вкажіть email' }]}
+                    >
+                        <Input
+                            className="rounded-lg py-2 px-4 border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-orange-400 transition"
+                        />
+                    </Form.Item>
+
+                    <Form.Item<IRegister>
+                        label={<span className="text-gray-700 dark:text-white font-medium">Прізвище</span>}
+                        name="lastName"
+                        rules={[{ required: true, message: 'Вкажіть email' }]}
+                    >
+                        <Input
+                            className="rounded-lg py-2 px-4 border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-orange-400 transition"
+                        />
+                    </Form.Item>
+
+                    <Form.Item<IRegister>
                         label={<span className="text-gray-700 dark:text-white font-medium">Пароль</span>}
                         name="password"
                         rules={[{ required: true, message: 'Вкажіть пароль' }]}
@@ -61,6 +82,8 @@ const LoginPage: React.FC = () => {
                             className="rounded-lg py-2 px-4 border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-orange-400 transition"
                         />
                     </Form.Item>
+
+                    <ImageUploadFormItem name="imageFile" label="Фоточка" />
 
                     <Form.Item>
                         <Button
@@ -78,4 +101,4 @@ const LoginPage: React.FC = () => {
     );
 }
 
-export default LoginPage;
+export default RegistrationPage;

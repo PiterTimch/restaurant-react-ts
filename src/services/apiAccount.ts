@@ -1,7 +1,8 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
-import type {ILogin, IUserInfo} from "./types.ts";
+import type {ILogin, IRegister, IUserInfo} from "./types.ts";
 import {jwtDecode} from "jwt-decode";
+import {serialize} from "object-to-formdata";
 
 export const apiAccount = createApi({
     reducerPath: 'api/account',
@@ -26,6 +27,20 @@ export const apiAccount = createApi({
             },
             invalidatesTags: ['CurrentUser'],
         }),
+        register: builder.mutation<void, IRegister>({
+            query: (credentials) => {
+                const formData = serialize(credentials);
+
+                return{
+                    url: 'register',
+                    method: 'POST',
+                    body: formData};
+            },
+            transformResponse: (response: { token: string }) => {
+                localStorage.setItem("token", response.token);
+            },
+            invalidatesTags: ['CurrentUser'],
+        }),
         getCurrentUser: builder.query<IUserInfo | null, void>({
             queryFn: () => {
                 const token = localStorage.getItem("token");
@@ -45,6 +60,7 @@ export const apiAccount = createApi({
 
 export const {
     useLoginMutation,
+    useRegisterMutation,
     useGetCurrentUserQuery,
     useLogoutMutation
 } = apiAccount;
