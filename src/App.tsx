@@ -10,6 +10,7 @@ import CategoriesCreatePage from "./pages/Categories/create";
 import CategoriesEditPage from "./pages/Categories/edit";
 import LoginPage from "./pages/Account/login";
 import RegistrationPage from "./pages/Account/register";
+import RequireAdmin from "./components/ProtectedRoute/RequireAdmin.tsx";
 
 const App: React.FC = () => {
     console.log("App rendered");
@@ -26,13 +27,15 @@ const App: React.FC = () => {
                 </Route>
 
 
-                <Route path={"admin"} element={<AdminLayout />}>
-                    <Route path="home" element={<DashboardHome />}/>
+                <Route path={"admin"} element={<RequireAdmin />}>
+                    <Route element={<AdminLayout />}>
+                        <Route path="home" element={<DashboardHome />}/>
 
-                    <Route path="categories">
-                        <Route index  element={<CategoriesListPage />} />
-                        <Route path='create' element={<CategoriesCreatePage />} />
-                        <Route path="edit/:slug" element={<CategoriesEditPage />} />
+                        <Route path="categories">
+                            <Route index  element={<CategoriesListPage />} />
+                            <Route path='create' element={<CategoriesCreatePage />} />
+                            <Route path="edit/:slug" element={<CategoriesEditPage />} />
+                        </Route>
                     </Route>
                 </Route>
 

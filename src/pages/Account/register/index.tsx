@@ -5,6 +5,8 @@ import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useRegisterMutation} from "../../../services/apiAccount.ts";
 import ImageUploadFormItem from "../../../components/ui/form/ImageUploadFormItem.tsx";
+import {loginSuccess} from "../../../store/authSlice.ts";
+import {useDispatch} from "react-redux";
 
 const RegistrationPage: React.FC = () => {
 
@@ -15,9 +17,12 @@ const RegistrationPage: React.FC = () => {
     const [form] = Form.useForm<IRegister>();
     const setServerErrors = useFormServerErrors(form);
 
+    const dispatch = useDispatch();
+
     const onFinish: FormProps<IRegister>['onFinish'] = async (values) => {
         try {
-            await register(values).unwrap();
+            const result = await register(values).unwrap();
+            dispatch(loginSuccess(result.token));
             navigate('/');
         } catch (error) {
             const serverError = error as ServerError;
@@ -25,7 +30,7 @@ const RegistrationPage: React.FC = () => {
             if (serverError?.status === 400 && serverError?.data?.errors) {
                 setServerErrors(serverError.data.errors);
             } else {
-                message.error("Сталася помилка при створенні категорії");
+                message.error("Сталася помилка при створенні акаунта");
             }
         }
     };

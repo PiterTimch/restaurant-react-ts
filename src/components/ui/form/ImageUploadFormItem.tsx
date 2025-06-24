@@ -32,6 +32,7 @@ const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
             return false;
         },
         showUploadList: false,
+        fileList: [],
     };
 
     return (

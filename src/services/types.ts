@@ -48,10 +48,10 @@ export interface ILogin
     password: string;
 }
 
-export interface IUserInfo
-{
+export interface User {
     name: string;
     email: string;
     image: string;
+    token: string;
     role: string;
 }

@@ -4,6 +4,8 @@ import type {ILogin, ServerError} from "../../../services/types.ts";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useLoginMutation} from "../../../services/apiAccount.ts";
+import {useDispatch} from "react-redux";
+import {loginSuccess} from "../../../store/authSlice.ts";
 
 const LoginPage: React.FC = () => {
 
@@ -14,9 +16,12 @@ const LoginPage: React.FC = () => {
     const [form] = Form.useForm<ILogin>();
     const setServerErrors = useFormServerErrors(form);
 
+    const dispatch = useDispatch();
+
     const onFinish: FormProps<ILogin>['onFinish'] = async (values) => {
         try {
-            await login(values).unwrap();
+            const result = await login(values).unwrap();
+            dispatch(loginSuccess(result.token));
             navigate('/');
         } catch (error) {
             const serverError = error as ServerError;
@@ -24,7 +29,7 @@ const LoginPage: React.FC = () => {
             if (serverError?.status === 400 && serverError?.data?.errors) {
                 setServerErrors(serverError.data.errors);
             } else {
-                message.error("Сталася помилка при створенні категорії");
+                message.error("Сталася помилка при вході");
             }
         }
     };

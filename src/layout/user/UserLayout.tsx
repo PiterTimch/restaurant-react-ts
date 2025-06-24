@@ -1,12 +1,17 @@
 import {Link, Outlet} from "react-router";
-import {useGetCurrentUserQuery, useLogoutMutation} from "../../services/apiAccount.ts";
 import {Button} from "antd";
 import {APP_ENV} from "../../env";
+import {useDispatch} from "react-redux";
+import {useAppSelector} from "../../store";
+import { logout } from "../../store/authSlice";
 
 const UserLayout: React.FC = () => {
 
-    const { data: user } = useGetCurrentUserQuery();
-    const [logout] = useLogoutMutation();
+    const {user} = useAppSelector(state => state.auth);
+
+    console.log("USER FROM REDUX:", user);
+
+    const dispatch = useDispatch();
 
     return (
         <div className="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
@@ -34,7 +39,7 @@ const UserLayout: React.FC = () => {
                         )}
 
                         <Button
-                            onClick={() => logout()}
+                            onClick={() => dispatch(logout())}
                             className="bg-white text-orange-500 border-none hover:bg-orange-100"
                         >
                             Вихід
