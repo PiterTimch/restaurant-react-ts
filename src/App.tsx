@@ -18,8 +18,6 @@ const App: React.FC = () => {
     <>
         <Router>
             <Routes>
-                {/*<Route index element={<UserLayout>}></Route>*/}
-
                 <Route path="/" element={<UserLayout />}>
                     <Route index element={<UserHomePage />} />
 

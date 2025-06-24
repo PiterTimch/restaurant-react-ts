@@ -31,7 +31,7 @@ const LoginPage: React.FC = () => {
 
     return (
         <div className="min-h-[80vh] flex items-center justify-center px-4">
-        <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-800 animate-fade-in">
+            <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-800 animate-fade-in">
                 {isLoading && <LoadingOverlay />}
 
                 <h2 className="text-2xl font-semibold text-center text-orange-500 mb-6">Вхід в акаунт</h2>
