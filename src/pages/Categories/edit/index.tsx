@@ -5,6 +5,7 @@ import { useEditCategoryMutation, useGetCategoryBySlugQuery } from "../../../ser
 import { useNavigate, useParams } from "react-router";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
+import {APP_ENV} from "../../../env";
 
 const CategoriesEditPage: React.FC = () => {
     const navigate = useNavigate();
@@ -50,7 +51,7 @@ const CategoriesEditPage: React.FC = () => {
                     onFinish={onFinish}
                     layout="horizontal"
                 >
-                    {/* Ховаємо id у формі, бо потрібен для API, але не відображаємо */}
+
                     <Form.Item name="id" noStyle>
                         <Input type="hidden" />
                     </Form.Item>
@@ -71,7 +72,16 @@ const CategoriesEditPage: React.FC = () => {
                         <Input />
                     </Form.Item>
 
-                    <ImageUploadFormItem name="imageFile" label="Нове фото" />
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-6">
+                        <img
+                            src={`${APP_ENV.IMAGES_400_URL}${category.image}`}
+                            alt="Поточне зображення"
+                            className="w-48 h-36 object-cover rounded-xl border opacity-40 pointer-events-none"
+                        />
+                        <div className="w-full max-w-sm">
+                            <ImageUploadFormItem name="imageFile" label="" />
+                        </div>
+                    </div>
 
                     <Form.Item label={null}>
                         <Button type="primary" htmlType="submit">
