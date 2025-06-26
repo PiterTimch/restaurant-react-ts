@@ -12,7 +12,8 @@ import LoginPage from "./pages/Account/Login";
 import RegistrationPage from "./pages/Account/Register";
 import RequireAdmin from "./components/ProtectedRoute/RequireAdmin.tsx";
 import ProductsListPage from "./pages/Products";
-import ProductItemPage from "./pages/Products/item";
+import ProductItemPage from "./pages/Products/Item";
+import ProductTablePage from "./pages/Products/Table";
 
 const App: React.FC = () => {
     console.log("App rendered");
@@ -39,9 +40,13 @@ const App: React.FC = () => {
                         <Route path="home" element={<DashboardHome />}/>
 
                         <Route path="categories">
-                            <Route index  element={<CategoriesListPage />} />
+                            <Route index element={<CategoriesListPage />} />
                             <Route path='create' element={<CategoriesCreatePage />} />
                             <Route path="edit/:slug" element={<CategoriesEditPage />} />
+                        </Route>
+
+                        <Route path="products">
+                            <Route index element={<ProductTablePage />}></Route>
                         </Route>
                     </Route>
                 </Route>
