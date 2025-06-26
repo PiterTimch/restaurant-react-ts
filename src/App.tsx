@@ -14,6 +14,7 @@ import RequireAdmin from "./components/ProtectedRoute/RequireAdmin.tsx";
 import ProductsListPage from "./pages/Products";
 import ProductItemPage from "./pages/Products/Item";
 import ProductTablePage from "./pages/Products/Table";
+import ProductCreatePage from "./pages/Products/Create";
 
 const App: React.FC = () => {
     console.log("App rendered");
@@ -47,6 +48,7 @@ const App: React.FC = () => {
 
                         <Route path="products">
                             <Route index element={<ProductTablePage />}></Route>
+                            <Route path="create" element={<ProductCreatePage />}></Route>
                         </Route>
                     </Route>
                 </Route>

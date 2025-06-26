@@ -62,6 +62,7 @@ export interface User {
 
 //Товари
 export interface IProductSize {
+    id: number;
     name: string;
 }
 
@@ -71,6 +72,7 @@ export interface IProductImages {
 }
 
 export interface IIngredient {
+    id: number;
     name: string;
     image: string;
 }
@@ -94,4 +96,15 @@ export interface IProductItem {
     productImages: IProductImages[];
     productIngredients: IIngredient[];
     variants: IProductVariant[];
+}
+
+export interface IProductCreate {
+    name: string;
+    slug: string;
+    weight: number;
+    price: number;
+    categoryId: number;
+    productSizeId: number | null;
+    ingredientIds: number[] | null;
+    imageFiles: string[] | null;
 }
