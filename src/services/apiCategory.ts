@@ -27,7 +27,7 @@ export const apiCategory = createApi({
                         body: formData,
                     };
                 } catch {
-                    throw new Error('Error create category');
+                    throw new Error('Error Create category');
                 }
             },
             invalidatesTags: ['Categories'],
@@ -42,7 +42,7 @@ export const apiCategory = createApi({
                         body: formData,
                     };
                 } catch {
-                    throw new Error('Error edit category');
+                    throw new Error('Error Edit category');
                 }
             },
             invalidatesTags: ['Categories', 'Category'],

@@ -25,12 +25,12 @@ export const apiProduct = createApi({
         //         try {
         //             const formData = serialize(newCategory);
         //             return {
-        //                 url: 'create',
+        //                 url: 'Create',
         //                 method: 'POST',
         //                 body: formData,
         //             };
         //         } catch {
-        //             throw new Error('Error create category');
+        //             throw new Error('Error Create category');
         //         }
         //     },
         //     invalidatesTags: ['Products'],
