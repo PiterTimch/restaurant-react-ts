@@ -1,12 +1,12 @@
 import {useNavigate} from "react-router-dom";
-import {useCreateProductMutation, useGetAllIngredientsQuery, useGetAllSizesQuery} from "../../../services/apiProduct";
-import {useGetAllCategoriesQuery} from "../../../services/apiCategory";
-import type {IProductCreate, ServerError} from "../../../services/types";
-import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
+import {useCreateProductMutation, useGetAllIngredientsQuery, useGetAllSizesQuery} from "../../../../services/apiProduct.ts";
+import {useGetAllCategoriesQuery} from "../../../../services/apiCategory.ts";
+import type {IProductCreate, ServerError} from "../../../../services/types.ts";
+import LoadingOverlay from "../../../../components/ui/loading/LoadingOverlay.tsx";
 import {useState} from "react";
-import DragDropUpload from "../../../components/ui/form/DragDropUpload.tsx";
+import DragDropUpload from "../../../../components/ui/form/DragDropUpload.tsx";
 import {Button, Form, Input, InputNumber, Select, message} from "antd";
-import {useFormServerErrors} from "../../../utilities/useFormServerErrors";
+import {useFormServerErrors} from "../../../../utilities/useFormServerErrors.ts";
 
 const ProductCreatePage = () => {
     const [images, setImages] = useState<any[]>([]);

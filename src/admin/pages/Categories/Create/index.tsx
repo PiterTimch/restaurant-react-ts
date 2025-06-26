@@ -1,10 +1,10 @@
 import {Button, Form, type FormProps, Input, message} from "antd";
-import type {ICategoryCreate, ServerError} from "../../../services/types.ts";
-import ImageUploadFormItem from "../../../components/ui/form/ImageUploadFormItem.tsx";
-import {useCreateCategoryMutation} from "../../../services/apiCategory.ts";
+import type {ICategoryCreate, ServerError} from "../../../../services/types.ts";
+import ImageUploadFormItem from "../../../../components/ui/form/ImageUploadFormItem.tsx";
+import {useCreateCategoryMutation} from "../../../../services/apiCategory.ts";
 import {useNavigate} from "react-router";
-import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import { useFormServerErrors } from "../../../utilities/useFormServerErrors.ts";
+import LoadingOverlay from "../../../../components/ui/loading/LoadingOverlay.tsx";
+import { useFormServerErrors } from "../../../../utilities/useFormServerErrors.ts";
 
 const CategoriesCreatePage: React.FC = () => {
 

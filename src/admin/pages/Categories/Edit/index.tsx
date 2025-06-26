@@ -1,11 +1,11 @@
 import { Button, Form, type FormProps, Input, message } from "antd";
-import type { ICategoryEdit, ServerError } from "../../../services/types.ts";
-import ImageUploadFormItem from "../../../components/ui/form/ImageUploadFormItem.tsx";
-import { useEditCategoryMutation, useGetCategoryBySlugQuery } from "../../../services/apiCategory.ts";
+import type { ICategoryEdit, ServerError } from "../../../../services/types.ts";
+import ImageUploadFormItem from "../../../../components/ui/form/ImageUploadFormItem.tsx";
+import { useEditCategoryMutation, useGetCategoryBySlugQuery } from "../../../../services/apiCategory.ts";
 import { useNavigate, useParams } from "react-router";
-import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
-import {APP_ENV} from "../../../env";
+import LoadingOverlay from "../../../../components/ui/loading/LoadingOverlay.tsx";
+import {useFormServerErrors} from "../../../../utilities/useFormServerErrors.ts";
+import {APP_ENV} from "../../../../env";
 
 const CategoriesEditPage: React.FC = () => {
     const navigate = useNavigate();

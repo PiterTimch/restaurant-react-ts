@@ -1,10 +1,10 @@
-import PageMeta from "../../components/common/PageMeta.tsx";
-import EcommerceMetrics from "../../components/ecommerce/EcommerceMetrics.tsx";
-import MonthlySalesChart from "../../components/ecommerce/MonthlySalesChart.tsx";
-import MonthlyTarget from "../../components/ecommerce/MonthlyTarget.tsx";
-import StatisticsChart from "../../components/ecommerce/StatisticsChart.tsx";
-import DemographicCard from "../../components/ecommerce/DemographicCard.tsx";
-import RecentOrders from "../../components/ecommerce/RecentOrders.tsx";
+import PageMeta from "../../../components/common/PageMeta.tsx";
+import EcommerceMetrics from "../../../components/ecommerce/EcommerceMetrics.tsx";
+import MonthlySalesChart from "../../../components/ecommerce/MonthlySalesChart.tsx";
+import MonthlyTarget from "../../../components/ecommerce/MonthlyTarget.tsx";
+import StatisticsChart from "../../../components/ecommerce/StatisticsChart.tsx";
+import DemographicCard from "../../../components/ecommerce/DemographicCard.tsx";
+import RecentOrders from "../../../components/ecommerce/RecentOrders.tsx";
 
 export default function DashboardHome() {
     return (
