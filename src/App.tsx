@@ -11,6 +11,8 @@ import CategoriesEditPage from "./pages/Categories/edit";
 import LoginPage from "./pages/Account/login";
 import RegistrationPage from "./pages/Account/register";
 import RequireAdmin from "./components/ProtectedRoute/RequireAdmin.tsx";
+import ProductsListPage from "./pages/Products";
+import ProductItemPage from "./pages/Products/item";
 
 const App: React.FC = () => {
     console.log("App rendered");
@@ -24,6 +26,11 @@ const App: React.FC = () => {
 
                     <Route path="login" element={<LoginPage />} />
                     <Route path="registration" element={<RegistrationPage />} />
+
+                    <Route path="products">
+                        <Route path="list" element={<ProductsListPage />}/>
+                        <Route path="list/:slug" element={<ProductItemPage />}/>
+                    </Route>
                 </Route>
 
 

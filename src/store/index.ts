@@ -3,11 +3,13 @@ import {apiCategory} from "../services/apiCategory.ts";
 import {apiAccount} from "../services/apiAccount.ts";
 import  authReducer from "../store/authSlice.ts";
 import {type TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
+import {apiProduct} from "../services/apiProduct.ts";
 
 export const store = configureStore({
     reducer: {
         [apiCategory.reducerPath]: apiCategory.reducer,
         [apiAccount.reducerPath]: apiAccount.reducer,
+        [apiProduct.reducerPath]: apiProduct.reducer,
         auth: authReducer
     },
 
@@ -15,6 +17,7 @@ export const store = configureStore({
         getDefaultMiddleware()
             .concat(apiCategory.middleware)
             .concat(apiAccount.middleware)
+            .concat(apiProduct.middleware)
 
 })
 

@@ -1,3 +1,5 @@
+//Категорії
+
 export interface ICategoryItem
 {
     id: number;
@@ -26,6 +28,7 @@ export interface ICategoryDelete
     id: number;
 }
 
+//Додаткові
 export interface ServerError {
     status: number;
     data: {
@@ -33,6 +36,7 @@ export interface ServerError {
     };
 }
 
+//Користувач
 export interface IRegister
 {
     firstName: string;
@@ -54,4 +58,40 @@ export interface User {
     image: string;
     token: string;
     role: string;
+}
+
+//Товари
+export interface IProductSize {
+    name: string;
+}
+
+export interface IProductImages {
+    name: string;
+    priority: number;
+}
+
+export interface IIngredient {
+    name: string;
+    image: string;
+}
+
+export interface IProductVariant {
+    id: number;
+    weight: number;
+    price: number;
+    productSize: IProductSize;
+    productImages: IProductImages[];
+}
+
+export interface IProductItem {
+    id: number;
+    name: string;
+    slug: string;
+    weight: number;
+    price: number;
+    category: ICategoryItem;
+    productSize: IProductSize;
+    productImages: IProductImages[];
+    productIngredients: IIngredient[];
+    variants: IProductVariant[];
 }
