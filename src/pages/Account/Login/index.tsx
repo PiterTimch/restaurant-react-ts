@@ -3,15 +3,17 @@ import {Button, Form, type FormProps, Input, message} from "antd";
 import type {ILogin, ServerError} from "../../../services/types.ts";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import {useLoginMutation} from "../../../services/apiAccount.ts";
+import {useLoginByGoogleMutation, useLoginMutation} from "../../../services/apiAccount.ts";
 import {useDispatch} from "react-redux";
 import {loginSuccess} from "../../../store/authSlice.ts";
+import {useGoogleLogin} from "@react-oauth/google";
 
 const LoginPage: React.FC = () => {
 
     const navigate = useNavigate();
 
-    const [login, {isLoading}] = useLoginMutation();
+    const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+    const [loginByGoogle, { isLoading: isGoogleLoading }] = useLoginByGoogleMutation();
 
     const [form] = Form.useForm<ILogin>();
     const setServerErrors = useFormServerErrors(form);
@@ -34,10 +36,29 @@ const LoginPage: React.FC = () => {
         }
     };
 
+    const loginUseGoogle = useGoogleLogin({
+        onSuccess: async (tokenResponse) =>
+        {
+            try {
+                const result = await loginByGoogle(tokenResponse.access_token).unwrap();
+                dispatch(loginSuccess(result.token));
+                navigate('/');
+            } catch (error) {
+                const serverError = error as ServerError;
+
+                if (serverError?.status === 400 && serverError?.data?.errors) {
+                    setServerErrors(serverError.data.errors);
+                } else {
+                    message.error("Сталася помилка при вході");
+                }
+            }
+        },
+    });
+
     return (
         <div className="min-h-[80vh] flex items-center justify-center px-4">
             <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-800 animate-fade-in">
-                {isLoading && <LoadingOverlay />}
+                {(isLoginLoading || isGoogleLoading)  && <LoadingOverlay />}
 
                 <h2 className="text-2xl font-semibold text-center text-orange-500 mb-6">Вхід в акаунт</h2>
 
@@ -74,6 +95,19 @@ const LoginPage: React.FC = () => {
                             className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition"
                         >
                             Увійти
+                        </Button>
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button
+                            type="primary"
+                            onClick={(event) =>  {
+                                event.preventDefault();
+                                loginUseGoogle();
+                            }}
+                            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition"
+                        >
+                            Увійти Google
                         </Button>
                     </Form.Item>
                 </Form>

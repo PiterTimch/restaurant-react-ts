@@ -9,13 +9,15 @@ const { Dragger } = Upload;
 type ImageUploadFormItemProps = {
     name: string;
     label?: string;
+    initialImage?: string | null;
 };
 
 const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
                                                                      name,
                                                                      label = "Фото",
+                                                                     initialImage = null,
                                                                  }) => {
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(initialImage);
 
     const props: UploadProps = {
         name: "file",
@@ -43,34 +45,32 @@ const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
                 e?.file?.originFileObj || e?.fileList?.[0]?.originFileObj || null
             }
         >
-            <>
-                {!previewUrl ? (
-                    <Dragger {...props} accept="image/*">
-                        <p className="ant-upload-drag-icon">
-                            <InboxOutlined />
-                        </p>
-                        <p className="ant-upload-text">
-                            Натисніть або перетягніть фото сюди
-                        </p>
-                        <p className="ant-upload-hint">Тільки зображення (1 файл)</p>
-                    </Dragger>
-                ) : (
-                    <div className="relative w-48 h-48 mx-auto border border-dashed border-gray-300 rounded-lg overflow-hidden shadow-md">
-                        <img
-                            src={previewUrl}
-                            alt="Preview"
-                            className="w-full h-full object-cover"
-                        />
-                        <button
-                            type="button"
-                            className="absolute top-1 right-1 bg-white bg-opacity-80 rounded-full text-red-500 hover:text-red-600"
-                            onClick={() => setPreviewUrl(null)}
-                        >
-                            <CloseCircleFilled className="text-xl" />
-                        </button>
-                    </div>
-                )}
-            </>
+            {!previewUrl ? (
+                <Dragger {...props} accept="image/*">
+                    <p className="ant-upload-drag-icon">
+                        <InboxOutlined />
+                    </p>
+                    <p className="ant-upload-text">
+                        Натисніть або перетягніть фото сюди
+                    </p>
+                    <p className="ant-upload-hint">Тільки зображення (1 файл)</p>
+                </Dragger>
+            ) : (
+                <div className="relative w-48 h-48 mx-auto border border-dashed border-gray-300 rounded-lg overflow-hidden shadow-md">
+                    <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                    />
+                    <button
+                        type="button"
+                        className="absolute top-1 right-1 bg-white bg-opacity-80 rounded-full text-red-500 hover:text-red-600"
+                        onClick={() => setPreviewUrl(null)}
+                    >
+                        <CloseCircleFilled className="text-xl" />
+                    </button>
+                </div>
+            )}
         </Form.Item>
     );
 };

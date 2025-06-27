@@ -72,14 +72,9 @@ const CategoriesEditPage: React.FC = () => {
                         <Input />
                     </Form.Item>
 
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-6">
-                        <img
-                            src={`${APP_ENV.IMAGES_400_URL}${category.image}`}
-                            alt="Поточне зображення"
-                            className="w-48 h-36 object-cover rounded-xl border opacity-40 pointer-events-none"
-                        />
+                    <div className="flex flex-col items-center justify-center mt-6">
                         <div className="w-full max-w-sm">
-                            <ImageUploadFormItem name="imageFile" label="" />
+                            <ImageUploadFormItem name="imageFile" label="" initialImage={`${APP_ENV.IMAGES_400_URL}${category.image}`} />
                         </div>
                     </div>
 

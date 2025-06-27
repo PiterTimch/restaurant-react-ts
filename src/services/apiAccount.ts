@@ -7,26 +7,21 @@ import {serialize} from "object-to-formdata";
 export const apiAccount = createApi({
     reducerPath: 'api/account',
     baseQuery: createBaseQuery('Account'),
-    //tagTypes: ['CurrentUser'],
     endpoints: (builder) => ({
         login: builder.mutation<{token: string}, ILogin>({
             query: (credentials) => ({
                 url: 'login',
                 method: 'POST',
                 body: credentials
-            }),
-            // transformResponse: (response: { token: string }) => {
-            //     localStorage.setItem("token", response.token);
-            // },
-            // invalidatesTags: ['CurrentUser']
+            })
         }),
-        // logout: builder.mutation<void, void>({
-        //     queryFn: () => {
-        //         localStorage.removeItem("token");
-        //         return { data: undefined };
-        //     },
-        //     invalidatesTags: ['CurrentUser'],
-        // }),
+        loginByGoogle:builder.mutation<{token: string}, string>({
+            query: (token) => ({
+                url: 'google-login',
+                method: 'POST',
+                body: {token}
+            })
+        }),
         register: builder.mutation<{token: string}, IRegister>({
             query: (credentials) => {
                 const formData = serialize(credentials);
@@ -35,32 +30,13 @@ export const apiAccount = createApi({
                     url: 'register',
                     method: 'POST',
                     body: formData};
-            },
-            // transformResponse: (response: { token: string }) => {
-            //     localStorage.setItem("token", response.token);
-            // },
-            // invalidatesTags: ['CurrentUser']
-        }),
-        // getCurrentUser: builder.query<IUserInfo | null, void>({
-        //     queryFn: () => {
-        //         const token = localStorage.getItem("token");
-        //         if (!token) return { data: null };
-        //
-        //         try {
-        //             const user = jwtDecode<IUserInfo>(token);
-        //             return { data: user };
-        //         } catch {
-        //             return { data: null };
-        //         }
-        //     },
-        //     providesTags: ['CurrentUser'],
-        // })
+            }
+        })
     })
 });
 
 export const {
     useLoginMutation,
     useRegisterMutation,
-    //useGetCurrentUserQuery,
-    //useLogoutMutation
+    useLoginByGoogleMutation
 } = apiAccount;
