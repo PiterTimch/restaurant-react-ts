@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router";
+import {Link, useNavigate} from "react-router";
 import {Button, Form, type FormProps, Input, message} from "antd";
 import type {ILogin, ServerError} from "../../../services/types.ts";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
@@ -56,7 +56,7 @@ const LoginPage: React.FC = () => {
     });
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center px-4">
+        <div className="min-h-[600px] flex items-center justify-center px-4">
             <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-800 animate-fade-in">
                 {(isLoginLoading || isGoogleLoading)  && <LoadingOverlay />}
 
@@ -96,6 +96,12 @@ const LoginPage: React.FC = () => {
                         >
                             Увійти
                         </Button>
+
+                        <div className="flex justify-end">
+                            <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                                Забули пароль?
+                            </Link>
+                        </div>
                     </Form.Item>
 
                     <Form.Item>

@@ -4,6 +4,10 @@ import type {ILogin, IRegister} from "./types.ts";
 //import {jwtDecode} from "jwt-decode";
 import {serialize} from "object-to-formdata";
 
+export  interface  IForgotPasswordRequest {
+    email: string;
+}
+
 export const apiAccount = createApi({
     reducerPath: 'api/account',
     baseQuery: createBaseQuery('Account'),
@@ -15,11 +19,32 @@ export const apiAccount = createApi({
                 body: credentials
             })
         }),
-        loginByGoogle:builder.mutation<{token: string}, string>({
+        loginByGoogle: builder.mutation<{token: string}, string>({
             query: (token) => ({
                 url: 'google-login',
                 method: 'POST',
                 body: {token}
+            })
+        }),
+        forgotPassword: builder.mutation<void, IForgotPasswordRequest>({
+            query: (data) => ({
+                url: 'forgot-password',
+                method: 'POST',
+                body: data
+            })
+        }),
+        validateResetToken: builder.mutation<{token: string}, boolean>({
+            query: (token) => ({
+                url: 'validate-reset-token',
+                method: 'POST',
+                body: {token}
+            })
+        }),
+        resetPassword: builder.mutation<{password: string}, void>({
+            query: (password) => ({
+                url: 'reset-password',
+                method: 'POST',
+                body: {password}
             })
         }),
         register: builder.mutation<{token: string}, IRegister>({
@@ -37,6 +62,9 @@ export const apiAccount = createApi({
 
 export const {
     useLoginMutation,
+    useForgotPasswordMutation,
+    useResetPasswordMutation,
+    useValidateResetTokenMutation,
     useRegisterMutation,
     useLoginByGoogleMutation
 } = apiAccount;
