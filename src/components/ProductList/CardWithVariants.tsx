@@ -17,10 +17,12 @@ const CardWithVariants = ({ product }: { product: IProductItem }) => {
     return (
         <div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col">
             <img
-                src={`${APP_ENV.IMAGES_800_URL}${selectedVariant.productImages[0].name}`}
+                src={`${APP_ENV.IMAGES_800_URL}${selectedVariant.productImages[0]?.name}`}
                 alt={product.name}
                 className="w-full h-72 object-cover"
             />
+
+            <h2 className={"font-bold mx-3 mt-5"} >{product.name}</h2>
 
             <div className="p-4 flex flex-col flex-1">
                 <select

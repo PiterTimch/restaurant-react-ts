@@ -16,7 +16,7 @@ const CategoryTableItem: React.FC<CategoryTableItemProps> = ({
                                      }) => {
     return(
         <>
-            <TableRow key={cat.id}>
+            <TableRow key={cat.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
                 <TableCell className="py-3 font-medium text-gray-800 dark:text-white/90">
                     {cat.name}
                 </TableCell>
@@ -38,7 +38,7 @@ const CategoryTableItem: React.FC<CategoryTableItemProps> = ({
                 <TableCell className="py-3">
                     <Space size="middle">
                         <Link to={`/admin/categories/edit/${cat.slug}`}>
-                            <Button icon={<EditOutlined />} />
+                            <Button icon={<EditOutlined />} className="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700" />
                         </Link>
 
                         <Button danger icon={<CloseCircleFilled />} onClick={() => refModal.current?.open(cat.id)} />

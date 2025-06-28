@@ -24,20 +24,20 @@ const CategoryTableItem: React.FC<ProductTableItemProps> = ({ prod }) => {
                 preview={false}
             />
         ) : (
-            <div className="h-[50px] w-[50px] bg-gray-200 rounded-md" />
+            <div className="h-[50px] w-[50px] bg-gray-200 dark:bg-gray-700 rounded-md" />
         )
     );
 
     return (
         <>
-            <TableRow key={prod.id}>
-                <TableCell className="py-3 font-medium">
+            <TableRow key={prod.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                <TableCell className="py-3 font-medium text-gray-800 dark:text-white/90">
                     <div className="flex gap-2">
                         {hasVariants && (
                             <Button
                                 icon={open ? <UpOutlined /> : <DownOutlined />}
                                 onClick={() => setOpen(!open)}
-                                className="border-0"
+                                className="border-0 dark:text-gray-300 dark:hover:bg-gray-700"
                             >
                                 Варіанти
                             </Button>
@@ -47,15 +47,15 @@ const CategoryTableItem: React.FC<ProductTableItemProps> = ({ prod }) => {
                     </div>
                 </TableCell>
 
-                <TableCell className="py-3 text-gray-500">{prod.slug}</TableCell>
-                <TableCell className="py-3 text-gray-500">{prod.price}</TableCell>
-                <TableCell className="py-3 text-gray-500">{prod.category.name}</TableCell>
+                <TableCell className="py-3 text-gray-500 dark:text-gray-400">{prod.slug}</TableCell>
+                <TableCell className="py-3 text-gray-500 dark:text-gray-400">{prod.price}</TableCell>
+                <TableCell className="py-3 text-gray-500 dark:text-gray-400">{prod.category.name}</TableCell>
                 <TableCell className="py-3">{renderImage(prod.productImages?.[0]?.name)}</TableCell>
 
                 <TableCell className="py-3">
                     {!hasVariants && (
                         <Space size="middle">
-                            <Button icon={<EditOutlined />} />
+                            <Button icon={<EditOutlined />} className="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700" />
                             <Button danger icon={<CloseCircleFilled />} />
                         </Space>
                     )}
@@ -64,17 +64,17 @@ const CategoryTableItem: React.FC<ProductTableItemProps> = ({ prod }) => {
 
             {hasVariants && open && (
                 prod.variants.map((variant: IProductVariant) => (
-                    <TableRow key={variant.id}>
-                        <TableCell className="py-3 text-gray-600">
+                    <TableRow key={variant.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                        <TableCell className="py-3 text-gray-600 dark:text-gray-300">
                             <Tag color="blue">Розмір: {variant.productSize.name}</Tag>
                         </TableCell>
-                        <TableCell></TableCell>
-                        <TableCell className="py-3">{variant.price}</TableCell>
-                        <TableCell></TableCell>
-                        <TableCell>{renderImage(variant.productImages?.[0]?.name)}</TableCell>
+                        <TableCell className="py-3">-</TableCell>
+                        <TableCell className="py-3 text-gray-500 dark:text-gray-400">{variant.price}</TableCell>
+                        <TableCell className="py-3">-</TableCell>
+                        <TableCell className="py-3">{renderImage(variant.productImages?.[0]?.name)}</TableCell>
                         <TableCell className="py-3">
                             <Space size="middle">
-                                <Button icon={<EditOutlined />} />
+                                <Button icon={<EditOutlined />} className="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700" />
                                 <Button danger icon={<CloseCircleFilled />} />
                             </Space>
                         </TableCell>

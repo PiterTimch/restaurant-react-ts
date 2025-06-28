@@ -47,7 +47,7 @@ const DragDropUpload: React.FC<DragDropUploadProps> = ({ fileList, setFileList }
                 onChange={onUploadChange}
                 showUploadList={false}
             >
-                <Button icon={<UploadOutlined />}>Вибрати файли</Button>
+                <Button icon={<UploadOutlined />} className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">Вибрати файли</Button>
             </Upload>
 
             <DragDropContext onDragEnd={onDragEnd}>
@@ -65,7 +65,7 @@ const DragDropUpload: React.FC<DragDropUploadProps> = ({ fileList, setFileList }
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
-                                            className="relative w-24 h-24 border border-gray-300 rounded overflow-hidden"
+                                            className="relative w-24 h-24 border border-gray-300 dark:border-gray-600 rounded overflow-hidden dark:bg-gray-700"
                                         >
                                             <img
                                                 src={
@@ -78,7 +78,7 @@ const DragDropUpload: React.FC<DragDropUploadProps> = ({ fileList, setFileList }
                                             />
                                             <button
                                                 type="button"
-                                                className="absolute top-1 right-1 bg-white rounded-full shadow p-1 text-xs hover:bg-red-500 hover:text-white"
+                                                className="absolute top-1 right-1 bg-white dark:bg-gray-800 rounded-full shadow p-1 text-xs hover:bg-red-500 hover:text-white dark:text-gray-300 dark:hover:bg-red-600"
                                                 onClick={() => handleRemove(file.uid)}
                                             >
                                                 ✕
@@ -93,7 +93,13 @@ const DragDropUpload: React.FC<DragDropUploadProps> = ({ fileList, setFileList }
                 </Droppable>
             </DragDropContext>
 
-            <Modal open={previewOpen} footer={null} onCancel={() => setPreviewOpen(false)}>
+            <Modal 
+                open={previewOpen} 
+                footer={null} 
+                onCancel={() => setPreviewOpen(false)}
+                className="dark:bg-gray-900"
+                title={<span className="dark:text-white/90">Попередній перегляд</span>}
+            >
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
         </div>

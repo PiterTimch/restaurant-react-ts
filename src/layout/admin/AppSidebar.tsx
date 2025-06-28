@@ -22,30 +22,30 @@ type NavItem = {
 
 const navItems: NavItem[] = [
     {
-        icon: <GridIcon />,
+        icon: <GridIcon className="dark:text-white/90" />,
         name: "Dashboard",
         subItems: [{ name: "DashboardHome", path: "/admin/home", pro: false }],
     },
     {
         name: "Categories",
-        icon: <TableIcon />,
+        icon: <TableIcon className="dark:text-white/90" />,
         subItems: [{ name: "List", path: "/admin/categories", pro: false }],
     },
     {
         name: "Products",
-        icon: <TableIcon />,
+        icon: <TableIcon className="dark:text-white/90" />,
         subItems: [{ name: "List", path: "/admin/products", pro: false }],
     },
     {
         name: "Users",
-        icon: <UserIcon />,
+        icon: <UserIcon className="dark:text-white/90" />,
         subItems: [{ name: "List", path: "/admin/users", pro: false }],
     }
 ];
 
 const othersItems: NavItem[] = [
     {
-        icon: <PieChartIcon />,
+        icon: <PieChartIcon className="dark:text-white/90" />,
         name: "Charts",
         subItems: [
             { name: "Line Chart", path: "/line-chart", pro: false },
@@ -53,7 +53,7 @@ const othersItems: NavItem[] = [
         ],
     },
     {
-        icon: <BoxCubeIcon />,
+        icon: <BoxCubeIcon className="dark:text-white/90" />,
         name: "UI Elements",
         subItems: [
             { name: "Alerts", path: "/alerts", pro: false },
@@ -65,7 +65,7 @@ const othersItems: NavItem[] = [
         ],
     },
     {
-        icon: <PlugInIcon />,
+        icon: <PlugInIcon className="dark:text-white/90" />,
         name: "Authentication",
         subItems: [
             { name: "Sign In", path: "/signin", pro: false },
@@ -169,15 +169,15 @@ const AppSidebar: React.FC = () => {
                 {nav.icon}
               </span>
                             {(isExpanded || isHovered || isMobileOpen) && (
-                                <span className="menu-item-text">{nav.name}</span>
+                                <span className="menu-item-text dark:text-white/90">{nav.name}</span>
                             )}
                             {(isExpanded || isHovered || isMobileOpen) && (
                                 <ChevronDownIcon
                                     className={`ml-auto w-5 h-5 transition-transform duration-200 ${
                                         openSubmenu?.type === menuType &&
                                         openSubmenu?.index === index
-                                            ? "rotate-180 text-brand-500"
-                                            : ""
+                                            ? "rotate-180 text-brand-500 dark:text-white/90"
+                                            : "dark:text-white/90"
                                     }`}
                                 />
                             )}
@@ -200,7 +200,7 @@ const AppSidebar: React.FC = () => {
                   {nav.icon}
                 </span>
                                 {(isExpanded || isHovered || isMobileOpen) && (
-                                    <span className="menu-item-text">{nav.name}</span>
+                                    <span className="menu-item-text dark:text-white/90">{nav.name}</span>
                                 )}
                             </Link>
                         )
@@ -223,7 +223,7 @@ const AppSidebar: React.FC = () => {
                                     <li key={subItem.name}>
                                         <Link
                                             to={subItem.path}
-                                            className={`menu-dropdown-item ${
+                                            className={`menu-dropdown-item dark:text-white/90 ${
                                                 isActive(subItem.path)
                                                     ? "menu-dropdown-Item-active"
                                                     : "menu-dropdown-Item-inactive"

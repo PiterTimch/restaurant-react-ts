@@ -35,14 +35,14 @@ const CategoriesEditPage: React.FC = () => {
         }
     };
 
-    if (isLoadingCategory) return <p>Завантаження категорії...</p>;
-    if (isErrorCategory || !category) return <p>Категорія не знайдена.</p>;
+    if (isLoadingCategory) return <p className="text-gray-600 dark:text-gray-400">Завантаження категорії...</p>;
+    if (isErrorCategory || !category) return <p className="text-gray-600 dark:text-gray-400">Категорія не знайдена.</p>;
 
     return (
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
             {(isLoadingEdit) && <LoadingOverlay />}
             <div className="max-w-full overflow-x-auto">
-                <h1>Редагувати категорію</h1>
+                <h1 className="text-2xl font-bold text-gray-800 dark:text-white/90 mb-6">Редагувати категорію</h1>
                 <Form
                     form={form}
                     initialValues={category}
@@ -50,6 +50,7 @@ const CategoriesEditPage: React.FC = () => {
                     wrapperCol={{ span: 18 }}
                     onFinish={onFinish}
                     layout="horizontal"
+                    className="dark:text-white/90"
                 >
 
                     <Form.Item name="id" noStyle>
@@ -60,16 +61,18 @@ const CategoriesEditPage: React.FC = () => {
                         label="Назва"
                         name="name"
                         rules={[{ required: true, message: 'Вкажіть назву категорії' }]}
+                        className="dark:text-white/90"
                     >
-                        <Input />
+                        <Input className="dark:bg-gray-700 dark:border-gray-600 dark:text-white/90" />
                     </Form.Item>
 
                     <Form.Item<ICategoryEdit>
                         label="Слаг"
                         name="slug"
                         rules={[{ required: true, message: 'Вкажіть слаг категорії' }]}
+                        className="dark:text-white/90"
                     >
-                        <Input />
+                        <Input className="dark:bg-gray-700 dark:border-gray-600 dark:text-white/90" />
                     </Form.Item>
 
                     <div className="flex flex-col items-center justify-center mt-6">
@@ -79,7 +82,7 @@ const CategoriesEditPage: React.FC = () => {
                     </div>
 
                     <Form.Item label={null}>
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit" className="dark:bg-blue-600 dark:border-blue-600 dark:hover:bg-blue-700">
                             Змінити
                         </Button>
                     </Form.Item>

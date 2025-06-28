@@ -50,8 +50,8 @@ const ProductCreatePage = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <h2 className="mb-4">Створення продукту</h2>
+        <div className="container mt-5 bg-white dark:bg-gray-900 rounded-lg p-6">
+            <h2 className="mb-4 text-2xl font-bold text-gray-800 dark:text-white/90">Створення продукту</h2>
             <Form
                 form={form}
                 layout="vertical"
@@ -66,33 +66,34 @@ const ProductCreatePage = () => {
                     ingredientIds: [],
                     imageFiles: []
                 }}
+                className="dark:text-white/90"
             >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="border rounded p-4">
-                        <Form.Item label="Зображення">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded p-4 dark:bg-gray-800">
+                        <Form.Item label="Зображення" className="dark:text-white/90">
                             <DragDropUpload fileList={images} setFileList={setImages} />
                         </Form.Item>
                     </div>
 
-                    <div className="border rounded p-4">
-                        <Form.Item name="name" label="Назва" rules={[{required: true, message: "Вкажіть назву продукту"}]}>
-                            <Input className="w-full border p-2 rounded mb-3" />
+                    <div className="border border-gray-200 dark:border-gray-700 rounded p-4 dark:bg-gray-800">
+                        <Form.Item name="name" label="Назва" rules={[{required: true, message: "Вкажіть назву продукту"}]} className="dark:text-white/90">
+                            <Input className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-3 dark:bg-gray-700 dark:text-white/90" />
                         </Form.Item>
 
-                        <Form.Item name="slug" label="Слаг" rules={[{required: true, message: "Вкажіть слаг"}]}>
-                            <Input className="w-full border p-2 rounded mb-3" />
+                        <Form.Item name="slug" label="Слаг" rules={[{required: true, message: "Вкажіть слаг"}]} className="dark:text-white/90">
+                            <Input className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-3 dark:bg-gray-700 dark:text-white/90" />
                         </Form.Item>
 
-                        <Form.Item name="weight" label="Вага (г)" rules={[{required: true, type: 'number', min: 1}]}>
-                            <InputNumber className="w-full border p-2 rounded mb-3" />
+                        <Form.Item name="weight" label="Вага (г)" rules={[{required: true, type: 'number', min: 1}]} className="dark:text-white/90">
+                            <InputNumber className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-3 dark:bg-gray-700 dark:text-white/90" />
                         </Form.Item>
 
-                        <Form.Item name="price" label="Ціна (грн)" rules={[{required: true, type: 'number', min: 0.01}]}>
-                            <InputNumber className="w-full border p-2 rounded mb-3" />
+                        <Form.Item name="price" label="Ціна (грн)" rules={[{required: true, type: 'number', min: 0.01}]} className="dark:text-white/90">
+                            <InputNumber className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-3 dark:bg-gray-700 dark:text-white/90" />
                         </Form.Item>
 
-                        <Form.Item name="productSizeId" label="Розмір">
-                            <Select className="w-full border p-2 rounded mb-3">
+                        <Form.Item name="productSizeId" label="Розмір" className="dark:text-white/90">
+                            <Select className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-3 dark:bg-gray-700 dark:text-white/90">
                                 <Select.Option value={0}>Оберіть розмір</Select.Option>
                                 {sizes.map(size => (
                                     <Select.Option key={size.id} value={size.id}>{size.name}</Select.Option>
@@ -100,8 +101,8 @@ const ProductCreatePage = () => {
                             </Select>
                         </Form.Item>
 
-                        <Form.Item name="categoryId" label="Категорія" rules={[{required: true, message: "Оберіть категорію"}]}>
-                            <Select className="w-full border p-2 rounded mb-3">
+                        <Form.Item name="categoryId" label="Категорія" rules={[{required: true, message: "Оберіть категорію"}]} className="dark:text-white/90">
+                            <Select className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-3 dark:bg-gray-700 dark:text-white/90">
                                 <Select.Option value={0}>Оберіть категорію</Select.Option>
                                 {categories.map(cat => (
                                     <Select.Option key={cat.id} value={cat.id}>{cat.name}</Select.Option>
@@ -110,15 +111,15 @@ const ProductCreatePage = () => {
                         </Form.Item>
 
                         <Form.Item>
-                            <Button htmlType="submit" className="btn btn-success w-full mt-3">
+                            <Button htmlType="submit" className="btn btn-success w-full mt-3 dark:bg-green-600 dark:border-green-600 dark:hover:bg-green-700">
                                 Додати продукт
                             </Button>
                         </Form.Item>
                     </div>
                 </div>
 
-                <div className="border rounded p-4 mt-5">
-                    <h5 className="mb-3 font-semibold">Інгредієнти</h5>
+                <div className="border border-gray-200 dark:border-gray-700 rounded p-4 mt-5 dark:bg-gray-800">
+                    <h5 className="mb-3 font-semibold text-gray-800 dark:text-white/90">Інгредієнти</h5>
                     <Form.Item name="ingredientIds">
                         <div className="flex flex-wrap gap-2">
                             {ingredients.map(ing => (
@@ -127,8 +128,8 @@ const ProductCreatePage = () => {
                                     onClick={() => toggleIngredient(ing.id)}
                                     className={`px-3 py-1 rounded cursor-pointer border ${
                                         selectedIngredients.includes(ing.id)
-                                            ? 'bg-green-200 border-green-500'
-                                            : 'bg-gray-100 border-gray-300'
+                                            ? 'bg-green-200 border-green-500 dark:bg-green-700 dark:border-green-600 dark:text-white'
+                                            : 'bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300'
                                     }`}
 
                                 >

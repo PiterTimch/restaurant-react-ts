@@ -20,8 +20,8 @@ const CategoriesListPage: React.FC = () => {
 
     const modalRef = useRef<DeleteConfirmModalRef>(null);
 
-    if (isLoading) return <p>Loading...</p>;
-    if (isError || !categories) return <p>Something went wrong.</p>;
+    if (isLoading) return <p className="text-gray-600 dark:text-gray-400">Loading...</p>;
+    if (isError || !categories) return <p className="text-gray-600 dark:text-gray-400">Something went wrong.</p>;
 
     const handleDelete = async (id: number) => {
         await deleteCategory({id: id});
@@ -36,8 +36,8 @@ const CategoriesListPage: React.FC = () => {
                     </h3>
 
                     <div className="flex items-center gap-3">
-                        <button className="btn">Filter</button>
-                        <button className="btn">See all</button>
+                        <button className="btn dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600">Filter</button>
+                        <button className="btn dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600">See all</button>
                     </div>
                 </div>
 
@@ -46,9 +46,9 @@ const CategoriesListPage: React.FC = () => {
                     className="inline-flex items-center
                 gap-2 px-4 py-2 bg-white text-black text-sm
                 font-medium rounded-lg shadow-md
-                hover:bg-green-400 transition mb-3"
+                hover:bg-green-400 transition mb-3 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
                 >
-                    <BoxIcon className="text-black w-5 h-5" />
+                    <BoxIcon className="text-black dark:text-gray-300 w-5 h-5" />
                     Додати
                 </Link>
 
@@ -56,10 +56,10 @@ const CategoriesListPage: React.FC = () => {
                     <Table>
                         <TableHeader className="border-gray-100 dark:border-gray-800 border-y">
                             <TableRow>
-                                <TableCell isHeader className="py-3 text-start">Category</TableCell>
-                                <TableCell isHeader className="py-3 text-start">Slug</TableCell>
-                                <TableCell isHeader className="py-3 text-start">Image</TableCell>
-                                <TableCell isHeader className="py-3 text-start">Action</TableCell>
+                                <TableCell isHeader className="py-3 text-start text-gray-800 dark:text-white/90">Category</TableCell>
+                                <TableCell isHeader className="py-3 text-start text-gray-800 dark:text-white/90">Slug</TableCell>
+                                <TableCell isHeader className="py-3 text-start text-gray-800 dark:text-white/90">Image</TableCell>
+                                <TableCell isHeader className="py-3 text-start text-gray-800 dark:text-white/90">Action</TableCell>
                             </TableRow>
                         </TableHeader>
 
