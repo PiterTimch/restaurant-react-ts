@@ -18,6 +18,7 @@ import ProductCreatePage from "./admin/pages/Products/Create";
 import ForgotPasswordPage from "./pages/Account/ForgotPassword";
 import ForgotSuccessPage from "./pages/Account/ForgotSuccess";
 import {ResetPasswordPage} from "./pages/Account/ResetPassword";
+import UserListPage from "./admin/pages/Users";
 
 const App: React.FC = () => {
     console.log("App rendered");
@@ -55,6 +56,10 @@ const App: React.FC = () => {
                         <Route path="products">
                             <Route index element={<ProductTablePage />}></Route>
                             <Route path="create" element={<ProductCreatePage />}></Route>
+                        </Route>
+
+                        <Route path="users">
+                            <Route index element={<UserListPage />}></Route>
                         </Route>
                     </Route>
                 </Route>

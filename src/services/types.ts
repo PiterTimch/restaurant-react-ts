@@ -108,3 +108,11 @@ export interface IProductCreate {
     ingredientIds: number[] | null;
     imageFiles: string[] | null;
 }
+
+export  interface IAdminUserItem {
+    id: number;
+    fullName: string;
+    email: string;
+    image: string;
+    loginTypes: string[];
+}
