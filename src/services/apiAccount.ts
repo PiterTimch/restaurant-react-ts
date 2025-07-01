@@ -22,6 +22,7 @@ export  interface IResetPasswordRequest {
 export const apiAccount = createApi({
     reducerPath: 'api/account',
     baseQuery: createBaseQuery('Account'),
+    tagTypes: ['Account'],
     endpoints: (builder) => ({
         login: builder.mutation<{token: string}, ILogin>({
             query: (credentials) => ({
@@ -45,11 +46,11 @@ export const apiAccount = createApi({
             })
         }),
         validateResetToken: builder.query<{isValid: boolean}, IValidateTokenRequest>({
-            query: (data) => ({
+            query: (params) => ({
                 url: 'validate-reset-token',
-                method: 'POST',
-                body: data
-            })
+                params
+            }),
+            providesTags: ['Account']
         }),
         resetPassword: builder.mutation<void, IResetPasswordRequest>({
             query: (data) => ({
