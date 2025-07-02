@@ -28,6 +28,19 @@ const CategoryTableItem: React.FC<UserTableItemProps> = ({
                 </TableCell>
 
                 <TableCell className="py-3 text-gray-500 dark:text-gray-400">
+                    {new Date(user.dateCreated).toLocaleDateString()}
+                </TableCell>
+
+                <TableCell className="py-3 text-gray-500 dark:text-gray-400">
+                    {user.roles.map((role, index) => (
+                        <span key={role}>
+                            {role}
+                            {index < user.roles.length - 1 && ', '}
+                        </span>
+                    ))}
+                </TableCell>
+
+                <TableCell className="py-3 text-gray-500 dark:text-gray-400">
                     {user.loginTypes.map((type, index) => (
                         <span key={type}>
                             {type}

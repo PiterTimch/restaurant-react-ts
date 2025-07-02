@@ -109,10 +109,33 @@ export interface IProductCreate {
     imageFiles: string[] | null;
 }
 
-export  interface IAdminUserItem {
+export interface IAdminUserItem {
     id: number;
     fullName: string;
     email: string;
     image: string;
+    dateCreated: string;
+    roles: string[];
     loginTypes: string[];
+}
+
+export interface IPaginationModel {
+    totalCount: number;
+    totalPages: number;
+    itemsPerPage: number;
+    currentPage: number;
+}
+
+export interface ISearchResult<T> {
+    items: T[];
+    pagination: IPaginationModel;
+}
+
+export interface IUserSearchParams {
+    name?: string;
+    role?: string;
+    page?: number;
+    itemPerPage?: number;
+    startDate?: string;
+    endDate?: string;
 }
