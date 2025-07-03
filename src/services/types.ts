@@ -133,7 +133,7 @@ export interface ISearchResult<T> {
 
 export interface IUserSearchParams {
     name?: string;
-    role?: string;
+    roles?: string[];
     page?: number;
     itemPerPage?: number;
     startDate?: string;
