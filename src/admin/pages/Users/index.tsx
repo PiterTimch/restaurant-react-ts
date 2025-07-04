@@ -12,6 +12,7 @@ import UserTableItem from "../../../components/ui/table/item/UserTableItem.tsx";
 import { DatePicker, Checkbox } from 'antd';
 import dayjs from 'dayjs';
 import type {IUserSearchParams} from "../../../services/types.ts";
+import Pagination from "../../../components/common/Pagination.tsx";
 const { RangePicker } = DatePicker;
 
 const ITEMS_PER_PAGE = 10;
@@ -226,54 +227,12 @@ const UserListPage: React.FC = () => {
                 </div>
 
                 {pagination && pagination.totalPages > 1 && (
-                    <div className="flex justify-center mt-6 gap-2 flex-wrap text-sm text-gray-700 dark:text-gray-300">
-                        <button
-                            onClick={() => handlePageChange(pagination.currentPage - 1)}
-                            disabled={pagination.currentPage <= 1}
-                            className="btn px-3"
-                        >
-                            ←
-                        </button>
-
-                        {pagination.currentPage > 2 && (
-                            <>
-                                <button onClick={() => handlePageChange(1)} className="btn px-3">1</button>
-                                {pagination.currentPage > 3 && <span className="px-2">...</span>}
-                            </>
-                        )}
-
-                        {[-1, 0, 1].map(offset => {
-                            const page = pagination.currentPage + offset;
-                            if (page <= 0 || page > pagination.totalPages) return null;
-
-                            return (
-                                <button
-                                    key={page}
-                                    onClick={() => handlePageChange(page)}
-                                    className={`btn px-3 ${page === pagination.currentPage ? 'bg-gray-200 dark:bg-gray-700' : ''}`}
-                                >
-                                    {page}
-                                </button>
-                            );
-                        })}
-
-                        {pagination.currentPage < pagination.totalPages - 1 && (
-                            <>
-                                {pagination.currentPage < pagination.totalPages - 2 && <span className="px-2">...</span>}
-                                <button onClick={() => handlePageChange(pagination.totalPages)} className="btn px-3">
-                                    {pagination.totalPages}
-                                </button>
-                            </>
-                        )}
-
-                        <button
-                            onClick={() => handlePageChange(pagination.currentPage + 1)}
-                            disabled={pagination.currentPage >= pagination.totalPages}
-                            className="btn px-3"
-                        >
-                            →
-                        </button>
-                    </div>
+                    <Pagination
+                        currentPage={pagination.currentPage}
+                        totalPages={pagination.totalPages}
+                        siblingCount={2}
+                        onPageChange={handlePageChange}
+                    />
                 )}
             </div>
         </>

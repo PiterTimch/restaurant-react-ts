@@ -9,7 +9,7 @@ interface UserTableItemProps {
     user: IAdminUserItem;
 }
 
-const CategoryTableItem: React.FC<UserTableItemProps> = ({
+const UserTableItem: React.FC<UserTableItemProps> = ({
                                                                  user
                                                              }) => {
     return(
@@ -74,4 +74,4 @@ const CategoryTableItem: React.FC<UserTableItemProps> = ({
     );
 }
 
-export default CategoryTableItem;
+export default UserTableItem;
