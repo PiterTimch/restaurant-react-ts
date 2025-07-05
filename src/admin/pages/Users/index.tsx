@@ -1,10 +1,11 @@
-import { useState } from "react";
+import {useRef, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router";
 import { BoxIcon } from "../../../icons";
 import {
     Table, TableBody, TableCell, TableHeader, TableRow
 } from "../../../components/ui/table";
 import {
+    useDeleteUserMutation,
     useSearchUsersQuery
 } from "../../../services/apiUser.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
@@ -13,6 +14,9 @@ import { DatePicker, Checkbox } from 'antd';
 import dayjs from 'dayjs';
 import type {IUserSearchParams} from "../../../services/types.ts";
 import Pagination from "../../../components/common/Pagination.tsx";
+import {setSearchParams} from "../../../store/userSearchSlice.ts";
+import {useAppDispatch} from "../../../store";
+import DeleteConfirmModal, {type DeleteConfirmModalRef} from "../../../components/common/DeleteConfirmModal.tsx";
 const { RangePicker } = DatePicker;
 
 const ITEMS_PER_PAGE = 10;
@@ -22,6 +26,15 @@ const UserListPage: React.FC = () => {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+
+    const modalRef = useRef<DeleteConfirmModalRef>(null);
+
+    const handleDelete = async (id: number) => {
+        await deleteUser({id: id});
+        updateSearchParams({page: searchParams.page});
+    };
 
     const parseQueryParams = (): IUserSearchParams => {
         const params = new URLSearchParams(location.search);
@@ -49,6 +62,8 @@ const UserListPage: React.FC = () => {
         if (newParams.endDate) urlParams.set("endDate", newParams.endDate);
         if (newParams.page) urlParams.set("page", newParams.page.toString());
         if (newParams.itemPerPage) urlParams.set("itemPerPage", newParams.itemPerPage.toString());
+
+        dispatch(setSearchParams(urlParams.toString()));
 
         navigate({ search: urlParams.toString() }, { replace: true });
     };
@@ -92,7 +107,7 @@ const UserListPage: React.FC = () => {
         });
     };
 
-    if (isLoading) return <LoadingOverlay />;
+    if (isLoading || isDeleting) return <LoadingOverlay />;
     if (isError) return <p className="text-gray-600 dark:text-gray-400">Something went wrong.</p>;
 
     const users = data?.items || [];
@@ -220,7 +235,7 @@ const UserListPage: React.FC = () => {
 
                         <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
                             {users.map(user => (
-                                <UserTableItem key={user.id} user={user} />
+                                <UserTableItem key={user.id} user={user} refModal={modalRef} />
                             ))}
                         </TableBody>
                     </Table>
@@ -235,6 +250,8 @@ const UserListPage: React.FC = () => {
                     />
                 )}
             </div>
+
+            <DeleteConfirmModal ref={modalRef} onDelete={handleDelete} loading={isDeleting} />
         </>
     );
 };

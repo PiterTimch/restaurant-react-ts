@@ -19,6 +19,7 @@ import ForgotPasswordPage from "./pages/Account/ForgotPassword";
 import ForgotSuccessPage from "./pages/Account/ForgotSuccess";
 import {ResetPasswordPage} from "./pages/Account/ResetPassword";
 import UserListPage from "./admin/pages/Users";
+import UserEditPage from "./admin/pages/Users/Edit";
 
 const App: React.FC = () => {
     console.log("App rendered");
@@ -60,6 +61,7 @@ const App: React.FC = () => {
 
                         <Route path="users">
                             <Route index element={<UserListPage />}></Route>
+                            <Route path="edit/:id" element={<UserEditPage />}></Route>
                         </Route>
                     </Route>
                 </Route>

@@ -5,6 +5,7 @@ import  authReducer from "../store/authSlice.ts";
 import {type TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {apiProduct} from "../services/apiProduct.ts";
 import {apiUser} from "../services/apiUser.ts";
+import userSearchReducer from '../store/userSearchSlice.ts';
 
 export const store = configureStore({
     reducer: {
@@ -12,7 +13,8 @@ export const store = configureStore({
         [apiAccount.reducerPath]: apiAccount.reducer,
         [apiProduct.reducerPath]: apiProduct.reducer,
         [apiUser.reducerPath]: apiUser.reducer,
-        auth: authReducer
+        auth: authReducer,
+        userSearch: userSearchReducer
     },
 
     middleware: (getDefaultMiddleware) =>

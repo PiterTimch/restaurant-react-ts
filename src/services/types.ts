@@ -139,3 +139,16 @@ export interface IUserSearchParams {
     startDate?: string;
     endDate?: string;
 }
+
+export interface IUserEdit {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    image: string;
+    roles: string[];
+}
+
+export interface IUserDelete {
+    id: number;
+}

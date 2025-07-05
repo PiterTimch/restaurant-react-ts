@@ -1,13 +1,14 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
 import type {
-    IAdminUserItem, ISearchResult, IUserSearchParams
+    IAdminUserItem, ISearchResult, IUserDelete, IUserEdit, IUserSearchParams
 } from "./types.ts";
+import {serialize} from "object-to-formdata";
 
 export const apiUser = createApi({
     reducerPath: 'api/user',
     baseQuery: createBaseQuery('Users'),
-    tagTypes: ['Users'],
+    tagTypes: ['Users', 'User'],
     endpoints: (builder) => ({
         getAllUsers: builder.query<IAdminUserItem[], void>({
             query: () => 'list',
@@ -26,11 +27,47 @@ export const apiUser = createApi({
                     ]
                     : [{ type: 'Users', id: 'PARTIAL-LIST' }],
         }),
+        editUser: builder.mutation<void, IUserEdit>({
+            query: (newUser) => {
+                try {
+                    const formData = serialize(newUser);
+                    return {
+                        url: 'edit',
+                        method: 'PUT',
+                        body: formData,
+                    };
+                } catch {
+                    throw new Error('Error Edit user');
+                }
+            },
+            invalidatesTags: ['Users', 'User']
+        }),
+        getUserById: builder.query<IAdminUserItem, number>({
+            query: (id) => `${id}`,
+            providesTags: ['User'],
+        }),
+        deleteUser: builder.mutation<void, IUserDelete>({
+            query: (user) => {
+                try {
+                    return {
+                        url: 'delete',
+                        method: 'DELETE',
+                        body: user
+                    };
+                } catch {
+                    throw new Error('Error delete category');
+                }
+            },
+            invalidatesTags: ['Users'],
+        })
     }),
 });
 
 
 export const {
     useGetAllUsersQuery,
-    useSearchUsersQuery
+    useSearchUsersQuery,
+    useEditUserMutation,
+    useGetUserByIdQuery,
+    useDeleteUserMutation
 } = apiUser;

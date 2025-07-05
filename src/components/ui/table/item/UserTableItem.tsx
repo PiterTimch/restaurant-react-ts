@@ -4,13 +4,16 @@ import {APP_ENV} from "../../../../env";
 import {Button, Space} from "antd";
 import {Link} from "react-router";
 import {CloseCircleFilled, EditOutlined} from "@ant-design/icons";
+import type {DeleteConfirmModalRef} from "../../../common/DeleteConfirmModal.tsx";
 
 interface UserTableItemProps {
     user: IAdminUserItem;
+    refModal:  React.RefObject<DeleteConfirmModalRef | null>;
 }
 
 const UserTableItem: React.FC<UserTableItemProps> = ({
-                                                                 user
+                                                                 user,
+                                                                 refModal
                                                              }) => {
     return(
         <>
@@ -62,11 +65,11 @@ const UserTableItem: React.FC<UserTableItemProps> = ({
 
                 <TableCell className="py-3">
                     <Space size="middle">
-                        <Link to={`#`}>
+                        <Link to={`edit/${user.id}`}>
                             <Button icon={<EditOutlined />} className="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700" />
                         </Link>
 
-                        <Button danger icon={<CloseCircleFilled />}/>
+                        <Button danger icon={<CloseCircleFilled onClick={() => refModal.current?.open(user.id)} />}/>
                     </Space>
                 </TableCell>
             </TableRow>
