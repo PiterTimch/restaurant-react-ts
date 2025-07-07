@@ -17,7 +17,8 @@ export const apiUser = createApi({
         searchUsers: builder.query<ISearchResult<IAdminUserItem>, IUserSearchParams>({
             query: (params) => ({
                 url: 'search',
-                params,
+                method: 'POST',
+                body: params
             }),
             providesTags: (result) =>
                 result

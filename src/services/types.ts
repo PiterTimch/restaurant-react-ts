@@ -116,7 +116,8 @@ export interface IAdminUserItem {
     image: string;
     dateCreated: string;
     roles: string[];
-    loginTypes: string[];
+    isGoogleLogin: boolean;
+    isPasswordLogin: boolean;
 }
 
 export interface IPaginationModel {

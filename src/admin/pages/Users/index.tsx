@@ -38,9 +38,12 @@ const UserListPage: React.FC = () => {
 
     const parseQueryParams = (): IUserSearchParams => {
         const params = new URLSearchParams(location.search);
+
+        const roles = params.getAll("roles");
+
         return {
             name: params.get("name") || "",
-            roles: params.getAll("roles") || undefined,
+            roles: roles.length > 0 ? roles : undefined,
             startDate: params.get("startDate") || undefined,
             endDate: params.get("endDate") || undefined,
             page: parseInt(params.get("page") || "1", 10),
@@ -51,7 +54,7 @@ const UserListPage: React.FC = () => {
     const [searchParams, setSearchParamsState] = useState<IUserSearchParams>(parseQueryParams());
 
     const updateSearchParams = (updated: Partial<IUserSearchParams>) => {
-        const newParams = { ...searchParams, ...updated };
+        const newParams = { ...searchParams, ...updated, itemPerPage: Math.min(Math.max(updated!.itemPerPage! ?? searchParams.itemPerPage, 1), 100), };
         setSearchParamsState(newParams);
 
         const urlParams = new URLSearchParams();
@@ -88,12 +91,15 @@ const UserListPage: React.FC = () => {
             ? [...new Set([...currentRoles, role])]
             : currentRoles.filter(r => r !== role);
 
+        console.log(updatedRoles);
+
         updateSearchParams({
-            roles: updatedRoles.length > 0 ? updatedRoles : undefined,
+            roles: updatedRoles.length > 0 && updatedRoles[0] ? updatedRoles : undefined,
             page: 1,
         });
     };
 
+    // @ts-ignore
     const handleDateChange = (dates) => {
         if (!dates) {
             updateSearchParams({ startDate: undefined, endDate: undefined, page: 1 });
@@ -203,6 +209,7 @@ const UserListPage: React.FC = () => {
                                 value={searchParams.itemPerPage}
                                 onChange={handleInputChange}
                                 min={1}
+                                max={100}
                             />
                         </div>
 
