@@ -4,6 +4,7 @@ import {APP_ENV} from "../../env";
 import {useDispatch} from "react-redux";
 import {useAppSelector} from "../../store";
 import { logout } from "../../store/authSlice";
+import CartDrawer from "../../components/Cart/CartDrewer";
 
 const UserLayout: React.FC = () => {
 
@@ -24,6 +25,8 @@ const UserLayout: React.FC = () => {
 
                 {user ? (
                     <div className="flex items-center gap-4">
+                        <CartDrawer />
+
                         <Link to="/account" className="flex items-center gap-2">
                             <img
                                 src={user.image ? `${APP_ENV.IMAGES_50_URL}${user.image}` : '/images/user/default.png'}

@@ -6,6 +6,8 @@ import {type TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {apiProduct} from "../services/apiProduct.ts";
 import {apiUser} from "../services/apiUser.ts";
 import userSearchReducer from '../store/userSearchSlice.ts';
+import {apiCart} from "../services/apiCart.ts";
+import cartReducer from '../store/cartSlice.ts';
 
 export const store = configureStore({
     reducer: {
@@ -13,8 +15,10 @@ export const store = configureStore({
         [apiAccount.reducerPath]: apiAccount.reducer,
         [apiProduct.reducerPath]: apiProduct.reducer,
         [apiUser.reducerPath]: apiUser.reducer,
+        [apiCart.reducerPath]: apiCart.reducer,
         auth: authReducer,
-        userSearch: userSearchReducer
+        userSearch: userSearchReducer,
+        cart: cartReducer
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -23,7 +27,7 @@ export const store = configureStore({
             .concat(apiAccount.middleware)
             .concat(apiProduct.middleware)
             .concat(apiUser.middleware)
-
+            .concat(apiCart.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>;

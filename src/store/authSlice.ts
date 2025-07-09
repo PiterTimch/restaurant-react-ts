@@ -23,8 +23,6 @@ const getUserFromToken = (token: string): User | null => {
     }
 };
 
-
-
 const token = localStorage.getItem('token');
 const initialUser = token ? getUserFromToken(token) : null;
 

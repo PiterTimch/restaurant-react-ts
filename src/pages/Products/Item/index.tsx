@@ -4,6 +4,8 @@ import {useParams} from "react-router";
 import type {IProductVariant} from "../../../services/types.ts";
 import {APP_ENV} from "../../../env";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
+import {useAppDispatch} from "../../../store";
+import {createUpdateCart} from "../../../thunks/cartThunks.ts";
 
 const ProductItemPage: React.FC = () => {
     const { slug } = useParams();
@@ -11,6 +13,19 @@ const ProductItemPage: React.FC = () => {
 
     const [selectedVariant, setSelectedVariant] = useState<IProductVariant | null>(null);
     const [mainImage, setMainImage] = useState<string | null>(null);
+
+    const dispatch = useAppDispatch();
+
+    const handleAddToCart = () => {
+        if (!product) return;
+
+        const item = {
+            productId: selectedVariant?.id ?? product.id,
+            quantity: 1
+        };
+
+        dispatch(createUpdateCart(item));
+    };
 
     useEffect(() => {
         if (!product) return;
@@ -115,6 +130,8 @@ const ProductItemPage: React.FC = () => {
                             ))}
                         </div>
                     </div>
+
+                    <button className={"bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-5 rounded-full"} onClick={handleAddToCart}>В кошик</button>
                 </div>
             </div>
             {isLoading && <LoadingOverlay />}

@@ -153,3 +153,29 @@ export interface IUserEdit {
 export interface IUserDelete {
     id: number;
 }
+
+export interface ICartItem {
+    id: number;
+    productId: number;
+    categoryId: number;
+    name: string;
+    categoryName: string;
+    quantity: number;
+    price: number;
+    sizeName: string;
+    imageName: string;
+}
+
+export interface ICreateUpdateCartItem {
+    productId: number;
+    quantity: number;
+}
+
+export interface IRemoveCartItem {
+    id: number;
+}
+
+export  interface ICart {
+    items: ICartItem[];
+    totalPrice: number;
+}
