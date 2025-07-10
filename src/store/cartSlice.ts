@@ -1,13 +1,13 @@
-import type {ICartItem, ICreateUpdateCartItem} from "../services/types.ts";
+import type {ICart, ICartItem, IRemoveCartItem} from "../services/types.ts";
 import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
 import type {RootState} from "./index.ts";
 
 interface CartState {
-    localCart: ICartItem[];
+    localCart: ICart;
 }
 
 const initialState: CartState = {
-    localCart: JSON.parse(localStorage.getItem('cart') || '[]')
+    localCart: JSON.parse(localStorage.getItem('cart') || '{}')
 };
 
 const cartSlice = createSlice({
@@ -15,36 +15,37 @@ const cartSlice = createSlice({
     initialState,
     reducers: {
 
-        createUpdateCartLocal: (state, action: PayloadAction<ICreateUpdateCartItem>) => {
+        createUpdateCartLocal: (state, action: PayloadAction<ICartItem>) => {
             const newItem = action.payload;
 
-            const index = state.localCart.findIndex(cartItem => cartItem.productId === newItem.productId);
+            if (!state.localCart.items) {
+                state.localCart.items = [];
+            }
+
+            const index = state.localCart.items!.findIndex(cartItem => cartItem.productId === newItem.productId);
 
             if (index >= 0) {
-                state.localCart[index].quantity += newItem.quantity;
+                state.localCart.items[index].quantity! = newItem.quantity!;
 
-                if (state.localCart[index].quantity <= 0) {
-                    state.localCart.splice(index, 1);
+                if (state.localCart.items[index].quantity! <= 0) {
+                    state.localCart.items.splice(index, 1);
                 }
             } else {
-                state.localCart.push({
-                    id: 0,
-                    productId: newItem.productId,
-                    quantity: newItem.quantity,
-                    categoryId: 0,
-                    name: 'Unknown',
-                    categoryName: 'Unknown',
-                    sizeName: '',
-                    price: 0,
-                    imageName: '',
-                });
+                state.localCart.items.push(newItem);
             }
 
             localStorage.setItem('cart', JSON.stringify(state.localCart));
         },
 
-        clearLocalCart: (state) => {
-            state.localCart = [];
+        removeCartItemLocal: (state, action: PayloadAction<IRemoveCartItem>) => {
+            const removeCart = action.payload;
+
+            state.localCart.items = state.localCart.items.filter(el  => el.productId != removeCart.id);
+            localStorage.setItem('cart', JSON.stringify(state.localCart));
+            },
+
+        clearLocalCartLocal: (state) => {
+            state.localCart.items = [];
             localStorage.removeItem('cart');
         },
     },
@@ -52,7 +53,8 @@ const cartSlice = createSlice({
 
 export const {
     createUpdateCartLocal,
-    clearLocalCart,
+    removeCartItemLocal,
+    clearLocalCartLocal
 } = cartSlice.actions;
 
 export const selectLocalCart = (state: RootState) => state.cart.localCart;

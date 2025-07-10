@@ -1,11 +1,10 @@
 import {useEffect, useState} from "react";
 import {useGetProductBySlugQuery} from "../../../services/apiProduct.ts";
 import {useParams} from "react-router";
-import type {IProductVariant} from "../../../services/types.ts";
+import type {ICartItem, IProductVariant} from "../../../services/types.ts";
 import {APP_ENV} from "../../../env";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import {useAppDispatch} from "../../../store";
-import {createUpdateCart} from "../../../thunks/cartThunks.ts";
+import {useCartCreateUpdate, useCartItems} from "../../../hooks/useCart.ts";
 
 const ProductItemPage: React.FC = () => {
     const { slug } = useParams();
@@ -14,17 +13,24 @@ const ProductItemPage: React.FC = () => {
     const [selectedVariant, setSelectedVariant] = useState<IProductVariant | null>(null);
     const [mainImage, setMainImage] = useState<string | null>(null);
 
-    const dispatch = useAppDispatch();
+    const { refetch } = useCartItems();
+    const [createUpdateItem] = useCartCreateUpdate(refetch);
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         if (!product) return;
 
-        const item = {
-            productId: selectedVariant?.id ?? product.id,
-            quantity: 1
+        const item: ICartItem = {
+            productId: selectedVariant ? selectedVariant.id : product.id,
+            quantity: 1,
+            sizeName: selectedVariant?.productSize?.name ?? "",
+            price: selectedVariant?.price ?? product.price,
+            imageName: selectedVariant?.productImages?.[0]?.name ?? product.productImages?.[0]?.name ?? "",
+            categoryId: product.category.id,
+            categoryName: product.category.name,
+            name: product.name,
         };
 
-        dispatch(createUpdateCart(item));
+        await createUpdateItem(item);
     };
 
     useEffect(() => {

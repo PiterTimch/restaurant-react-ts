@@ -155,15 +155,15 @@ export interface IUserDelete {
 }
 
 export interface ICartItem {
-    id: number;
-    productId: number;
-    categoryId: number;
-    name: string;
-    categoryName: string;
-    quantity: number;
-    price: number;
-    sizeName: string;
-    imageName: string;
+    id?: number;
+    productId?: number;
+    categoryId?: number;
+    name?: string;
+    categoryName?: string;
+    quantity?: number;
+    price?: number;
+    sizeName?: string;
+    imageName?: string;
 }
 
 export interface ICreateUpdateCartItem {

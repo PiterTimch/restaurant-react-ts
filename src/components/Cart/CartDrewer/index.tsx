@@ -1,31 +1,21 @@
 import { Badge, Button, Divider, Drawer, Image, List, Space, Typography } from "antd";
-import { useMemo, useState } from "react";
-import {
-    useCreateUpdateCartMutation,
-    useGetCartItemsQuery,
-    useRemoveCartItemMutation
-} from "../../../services/apiCart";
+import { useState } from "react";
 import type { ICartItem } from "../../../services/types.ts";
 import { APP_ENV } from "../../../env/index.ts";
+import {useCartCreateUpdate, useCartItems, useCartRemoveItem} from "../../../hooks/useCart.ts";
 
 const { Text, Title } = Typography;
 
 const CartDrawer: React.FC = () => {
     const [open, setOpen] = useState(false);
 
-    const { data: cartItems, isLoading, isError } = useGetCartItemsQuery();
-    const [createUpdateItem] = useCreateUpdateCartMutation();
-    const [removeItem] = useRemoveCartItemMutation();
-
-    const totalPrice = useMemo(() => {
-        console.log(cartItems)
-        if (cartItems)
-            return cartItems.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    }, [cartItems]);
+    const { data: cart, isLoading, isError, refetch } = useCartItems();
+    const [createUpdateItem] = useCartCreateUpdate(refetch);
+    const [removeItem] = useCartRemoveItem(refetch);
 
     return (
         <>
-            <Badge count={cartItems?.items.length} showZero>
+            <Badge count={cart?.items.length} showZero>
                 <Button onClick={() => setOpen(true)}>Кошик</Button>
             </Badge>
 
@@ -41,14 +31,14 @@ const CartDrawer: React.FC = () => {
                 {!isLoading && !isError && (
                     <>
                         <List
-                            dataSource={cartItems?.items}
+                            dataSource={cart?.items}
                             locale={{ emptyText: "Кошик порожній" }}
                             renderItem={(item: ICartItem) => (
                                 <List.Item
                                     actions={[
                                         <Button
                                             danger
-                                            onClick={() => removeItem({ id: item.id })}
+                                            onClick={() => removeItem({ id: item.id || item.productId! })}
                                         >
                                             Видалити
                                         </Button>
@@ -72,8 +62,8 @@ const CartDrawer: React.FC = () => {
                                                 <Button
                                                     size="small"
                                                     onClick={() =>
-                                                        item.quantity > 1 &&
-                                                        createUpdateItem({ ...item, quantity: item.quantity - 1 })
+                                                        item.quantity! > 1 &&
+                                                        createUpdateItem({ ...item, quantity: item.quantity! - 1 })
                                                     }
                                                 >
                                                     -
@@ -82,7 +72,7 @@ const CartDrawer: React.FC = () => {
                                                 <Button
                                                     size="small"
                                                     onClick={() =>
-                                                        createUpdateItem({ ...item, quantity: item.quantity + 1 })
+                                                        createUpdateItem({ ...item, quantity: item.quantity! + 1 })
                                                     }
                                                 >
                                                     +
@@ -99,8 +89,8 @@ const CartDrawer: React.FC = () => {
                         <div
                             style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
                         >
-                            <Title level={5}>Сума: {totalPrice} грн</Title>
-                            <Button type="primary" disabled={cartItems?.items.length === 0}>
+                            <Title level={5}>Сума: {cart.totalPrice} грн</Title>
+                            <Button type="primary" disabled={cart?.items.length === 0}>
                                 Оформити замовлення
                             </Button>
                         </div>
