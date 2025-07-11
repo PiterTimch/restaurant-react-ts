@@ -1,21 +1,62 @@
-import { Badge, Button, Divider, Drawer, Image, List, Space, Typography } from "antd";
-import { useState } from "react";
-import type { ICartItem } from "../../../services/types.ts";
-import { APP_ENV } from "../../../env/index.ts";
-import {useCartCreateUpdate, useCartItems, useCartRemoveItem} from "../../../hooks/useCart.ts";
+import {Badge, Button, Drawer, List, Space, Image, Typography, Divider} from "antd";
+import {useAppDispatch, useAppSelector} from "../../../store";
+import {useState} from "react";
+import type {ICartItem, ICreateUpdateCartItem, IRemoveCartItem} from "../../../services/types.ts";
+import {APP_ENV} from "../../../env";
+import {createUpdateCart} from "../../../store/cartSlice.ts";
+import {useCreateUpdateCartMutation, useRemoveCartItemMutation} from "../../../services/apiCart.ts";
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 const CartDrawer: React.FC = () => {
     const [open, setOpen] = useState(false);
 
-    const { data: cart, isLoading, isError, refetch } = useCartItems();
-    const [createUpdateItem] = useCartCreateUpdate(refetch);
-    const [removeItem] = useCartRemoveItem(refetch);
+    const items = useAppSelector(state => state.cart.items);
+
+    const {user} = useAppSelector(state => state.auth);
+
+    const  dispatch = useAppDispatch();
+
+    const [removeServerCartItem] = useRemoveCartItemMutation();
+    const [createUpdateServerCart] = useCreateUpdateCartMutation();
+
+    const handleEditCart = (prop : ICreateUpdateCartItem) => {
+        const newItems = items.map(item => {
+            if (item.productId === prop.productId) {
+                return {
+                    ...item,
+                    quantity: prop.quantity,
+                };
+            }
+            return item;
+        });
+
+        if (user) {
+            createUpdateServerCart(prop)
+        }
+        else {
+            localStorage.setItem('cart', JSON.stringify(newItems));
+        }
+
+        dispatch(createUpdateCart(newItems));
+    };
+
+    const handleRemoveCart = (prop: IRemoveCartItem) => {
+        const newItems = items.filter(el  => el.productId != prop.id);
+
+        if (user) {
+            removeServerCartItem(prop);
+        }
+        else {
+            localStorage.setItem('cartItems', JSON.stringify(newItems));
+        }
+
+        dispatch(createUpdateCart(newItems))
+    }
 
     return (
         <>
-            <Badge count={cart?.items.length} showZero>
+            <Badge count={items?.length} showZero>
                 <Button onClick={() => setOpen(true)}>Кошик</Button>
             </Badge>
 
@@ -25,77 +66,71 @@ const CartDrawer: React.FC = () => {
                 open={open}
                 width={400}
             >
-                {isLoading && <Text>Завантаження...</Text>}
-                {isError && <Text type="danger">Помилка завантаження кошика</Text>}
 
-                {!isLoading && !isError && (
-                    <>
-                        <List
-                            dataSource={cart?.items}
-                            locale={{ emptyText: "Кошик порожній" }}
-                            renderItem={(item: ICartItem) => (
-                                <List.Item
-                                    actions={[
-                                        <Button
-                                            danger
-                                            onClick={() => removeItem({ id: item.id || item.productId! })}
-                                        >
-                                            Видалити
-                                        </Button>
-                                    ]}
+                <List
+                    dataSource={items}
+                    locale={{ emptyText: "Кошик порожній" }}
+                    renderItem={(item: ICartItem) => (
+                        <List.Item
+                            actions={[
+                                <Button
+                                    danger
+                                    onClick={() => handleRemoveCart({ id: item.id || item.productId! })}
                                 >
-                                    <Space align="start">
-                                        <Image
-                                            src={`${APP_ENV.IMAGES_200_URL}${item.imageName}`}
-                                            width={64}
-                                            height={64}
-                                            preview={false}
-                                        />
-                                        <div>
-                                            <Text strong>
-                                                {item.name}
-                                            </Text>
-                                            <br />
-                                            <Text type="secondary">{item.categoryName}</Text>
-                                            <br />
-                                            <div style={{ display: "flex", alignItems: "center", gap: 8, margin: "8px 0" }}>
-                                                <Button
-                                                    size="small"
-                                                    onClick={() =>
-                                                        item.quantity! > 1 &&
-                                                        createUpdateItem({ ...item, quantity: item.quantity! - 1 })
-                                                    }
-                                                >
-                                                    -
-                                                </Button>
-                                                <Text>{item.quantity}</Text>
-                                                <Button
-                                                    size="small"
-                                                    onClick={() =>
-                                                        createUpdateItem({ ...item, quantity: item.quantity! + 1 })
-                                                    }
-                                                >
-                                                    +
-                                                </Button>
-                                            </div>
-                                            <Text>Ціна: {item.price} ₴</Text>
-                                        </div>
-                                    </Space>
-                                </List.Item>
-                            )}
-                        />
-
-                        <Divider />
-                        <div
-                            style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                                    Видалити
+                                </Button>
+                            ]}
                         >
-                            <Title level={5}>Сума: {cart.totalPrice} грн</Title>
-                            <Button type="primary" disabled={cart?.items.length === 0}>
-                                Оформити замовлення
-                            </Button>
-                        </div>
-                    </>
-                )}
+                            <Space align="start">
+                                <Image
+                                    src={`${APP_ENV.IMAGES_200_URL}${item.imageName}`}
+                                    width={64}
+                                    height={64}
+                                    preview={false}
+                                />
+                                <div>
+                                    <Text strong>
+                                        {item.name}
+                                    </Text>
+                                    <br />
+                                    <Text type="secondary">{item.categoryName}</Text>
+                                    <br />
+                                    <div style={{ display: "flex", alignItems: "center", gap: 8, margin: "8px 0" }}>
+                                        <Button
+                                            size="small"
+                                            onClick={() =>
+                                                item.quantity! > 1 &&
+                                                handleEditCart({ productId: item.productId!, quantity: item.quantity! - 1})
+                                            }
+                                        >
+                                            -
+                                        </Button>
+                                        <Text>{item.quantity}</Text>
+                                        <Button
+                                            size="small"
+                                            onClick={() =>
+                                                handleEditCart({ productId: item.productId!, quantity: item.quantity! + 1})
+                                            }
+                                        >
+                                            +
+                                        </Button>
+                                    </div>
+                                    <Text>Ціна: {item.price} ₴</Text>
+                                </div>
+                            </Space>
+                        </List.Item>
+                    )}
+                />
+
+                <Divider />
+
+                <div
+                    style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                >
+                    <Button type="primary" disabled={items.length === 0}>
+                        Оформити замовлення
+                    </Button>
+                </div>
             </Drawer>
         </>
     );

@@ -10,8 +10,6 @@ const UserLayout: React.FC = () => {
 
     const {user} = useAppSelector(state => state.auth);
 
-    console.log("USER FROM REDUX:", user);
-
     const dispatch = useDispatch();
 
     return (

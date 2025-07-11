@@ -1,6 +1,10 @@
 import './App.css';
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router";
+import {useAppDispatch, useAppSelector} from "./store";
+import {useCreateUpdateCartMutation, useGetCartItemsQuery, useRemoveCartItemMutation} from "./services/apiCart.ts";
+import type {ICartItem} from "./services/types.ts";
+import {createUpdateCart} from "./store/cartSlice.ts";
 
 const DashboardHome = React.lazy(() => import("./admin/pages/Dashboard/DashboardHome.tsx"));
 const AdminLayout = React.lazy(() => import("./layout/admin/AdminLayout.tsx"));
@@ -24,6 +28,77 @@ const UserListPage = React.lazy(() => import("./admin/pages/Users"));
 const UserEditPage = React.lazy(() => import("./admin/pages/Users/Edit"));
 
 const App: React.FC = () => {
+    const hasSyncedCart = useRef(false);
+
+    const {user} = useAppSelector(state => state.auth);
+    const {items} = useAppSelector(state => state.cart)
+
+    const { data: serverCart } = useGetCartItemsQuery();
+    const [createUpdateServerCart] = useCreateUpdateCartMutation();
+    const [removeServerCartItem] = useRemoveCartItemMutation();
+
+    const  dispatch = useAppDispatch();
+
+    const loadUserCart = () => {
+        if (!serverCart?.items) return;
+
+        const combinedMap = new Map<number, ICartItem>();
+
+        for (const item of items) {
+            if (!item.productId) continue;
+            combinedMap.set(item.productId, { ...item });
+        }
+
+        for (const item of serverCart.items) {
+            if (!item.productId) continue;
+
+            if (combinedMap.has(item.productId)) {
+                const existingItem = combinedMap.get(item.productId)!;
+                combinedMap.set(item.productId, {
+                    ...existingItem,
+                    quantity: (existingItem.quantity || 0) + (item.quantity || 0),
+                });
+            } else {
+                combinedMap.set(item.productId, { ...item });
+            }
+
+            removeServerCartItem({
+                id: item.id!
+            });
+        }
+
+        const newItems = Array.from(combinedMap.values());
+
+        for (const item of newItems) {
+            createUpdateServerCart({
+                productId: item.productId!,
+                quantity: item.quantity!,
+            })
+        }
+
+        dispatch(createUpdateCart(newItems));
+
+        console.log(newItems);
+
+        localStorage.removeItem('cart');
+    };
+
+    const handleUserSetUp = () => {
+        if (user && serverCart && !hasSyncedCart.current) {
+            loadUserCart();
+            hasSyncedCart.current = true;
+        }
+
+        if (!user) {
+            dispatch(createUpdateCart([]));
+            hasSyncedCart.current = false;
+        }
+    }
+
+    useEffect(() => {
+        handleUserSetUp();
+    }, [user, serverCart]);
+
     return (
         <Router>
             <React.Suspense fallback={<div>Завантаження...</div>}>

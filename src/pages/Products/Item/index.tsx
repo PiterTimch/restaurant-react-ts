@@ -4,7 +4,10 @@ import {useParams} from "react-router";
 import type {ICartItem, IProductVariant} from "../../../services/types.ts";
 import {APP_ENV} from "../../../env";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import {useCartCreateUpdate, useCartItems} from "../../../hooks/useCart.ts";
+import {useAppDispatch, useAppSelector} from "../../../store";
+import {useCreateUpdateCartMutation} from "../../../services/apiCart.ts";
+import {createUpdateCart} from "../../../store/cartSlice.ts";
+//import {useCartCreateUpdate, useCartItems} from "../../../hooks/useCart.ts";
 
 const ProductItemPage: React.FC = () => {
     const { slug } = useParams();
@@ -13,13 +16,21 @@ const ProductItemPage: React.FC = () => {
     const [selectedVariant, setSelectedVariant] = useState<IProductVariant | null>(null);
     const [mainImage, setMainImage] = useState<string | null>(null);
 
-    const { refetch } = useCartItems();
-    const [createUpdateItem] = useCartCreateUpdate(refetch);
+    const  dispatch = useAppDispatch();
+
+    const {user} = useAppSelector(state => state.auth);
+
+    const items = useAppSelector(state => state.cart.items);
+
+    const [createUpdateServerCart] = useCreateUpdateCartMutation();
+
+    //const { refetch } = useCartItems();
+    //const [createUpdateItem] = useCartCreateUpdate(refetch);
 
     const handleAddToCart = async () => {
         if (!product) return;
 
-        const item: ICartItem = {
+        const newItem: ICartItem = {
             productId: selectedVariant ? selectedVariant.id : product.id,
             quantity: 1,
             sizeName: selectedVariant?.productSize?.name ?? "",
@@ -30,7 +41,34 @@ const ProductItemPage: React.FC = () => {
             name: product.name,
         };
 
-        await createUpdateItem(item);
+        let newItems : ICartItem[] = items.length > 0 ? [...items] : [];
+
+        if (!newItems) {
+            newItems = [];
+        }
+        const index = newItems!.findIndex(cartItem => cartItem.productId === newItem.productId);
+        if (index >= 0) {
+            newItems[index].quantity! = newItem.quantity!;
+
+            if (newItems[index].quantity! <= 0) {
+                newItems.splice(index, 1);
+            }
+        } else {
+            newItems.push(newItem);
+        }
+
+        if (!user) {
+            localStorage.setItem('cart', JSON.stringify(newItems));
+        }
+        else {
+            createUpdateServerCart({
+                productId: newItem.productId!,
+                quantity: newItem.quantity!,
+            });
+        }
+        dispatch(createUpdateCart(newItems));
+
+        //await createUpdateItem(item);
     };
 
     useEffect(() => {
