@@ -42,16 +42,18 @@ const CartDrawer: React.FC = () => {
     };
 
     const handleRemoveCart = (prop: IRemoveCartItem) => {
+        console.log(prop)
+
         const newItems = items.filter(el  => el.productId != prop.id);
 
         if (user) {
             removeServerCartItem(prop);
         }
         else {
-            localStorage.setItem('cartItems', JSON.stringify(newItems));
+            localStorage.setItem('cart', JSON.stringify(newItems));
         }
 
-        dispatch(createUpdateCart(newItems))
+        dispatch(createUpdateCart(newItems));
     }
 
     return (
@@ -75,7 +77,7 @@ const CartDrawer: React.FC = () => {
                             actions={[
                                 <Button
                                     danger
-                                    onClick={() => handleRemoveCart({ id: item.id || item.productId! })}
+                                    onClick={() => handleRemoveCart({ id: item.productId! })}
                                 >
                                     Видалити
                                 </Button>

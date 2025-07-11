@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useState} from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router";
 import {useAppDispatch, useAppSelector} from "./store";
 import {useCreateUpdateCartMutation, useGetCartItemsQuery, useRemoveCartItemMutation} from "./services/apiCart.ts";
@@ -28,25 +28,28 @@ const UserListPage = React.lazy(() => import("./admin/pages/Users"));
 const UserEditPage = React.lazy(() => import("./admin/pages/Users/Edit"));
 
 const App: React.FC = () => {
-    const hasSyncedCart = useRef(false);
-
+    const dispatch = useAppDispatch();
     const {user} = useAppSelector(state => state.auth);
-    const {items} = useAppSelector(state => state.cart)
-
+    const {items} = useAppSelector(state => state.cart);
     const { data: serverCart } = useGetCartItemsQuery();
+
     const [createUpdateServerCart] = useCreateUpdateCartMutation();
     const [removeServerCartItem] = useRemoveCartItemMutation();
 
-    const  dispatch = useAppDispatch();
+    const [isCartSynced, setIsCartSynced] = useState(false);
 
-    const loadUserCart = () => {
+    const loadUserCart = async () => {
         if (!serverCart?.items) return;
 
         const combinedMap = new Map<number, ICartItem>();
 
-        for (const item of items) {
-            if (!item.productId) continue;
-            combinedMap.set(item.productId, { ...item });
+        const lcItems = JSON.parse(localStorage.getItem('cart')!);
+
+        if (lcItems){
+            for (const item of lcItems) {
+                if (!item.productId) continue;
+                combinedMap.set(item.productId, { ...item });
+            }
         }
 
         for (const item of serverCart.items) {
@@ -62,41 +65,34 @@ const App: React.FC = () => {
                 combinedMap.set(item.productId, { ...item });
             }
 
-            removeServerCartItem({
-                id: item.id!
-            });
+            if (item.id) {
+                await removeServerCartItem({ id: item.id });
+            }
         }
 
         const newItems = Array.from(combinedMap.values());
 
         for (const item of newItems) {
-            createUpdateServerCart({
+            await createUpdateServerCart({
                 productId: item.productId!,
                 quantity: item.quantity!,
-            })
+            });
         }
 
         dispatch(createUpdateCart(newItems));
 
-        console.log(newItems);
-
-        localStorage.removeItem('cart');
+        localStorage.removeItem('cart')
     };
 
-    const handleUserSetUp = () => {
-        if (user && serverCart && !hasSyncedCart.current) {
-            loadUserCart();
-            hasSyncedCart.current = true;
+    useEffect(() => {
+        if (user && serverCart && !isCartSynced) {
+            loadUserCart().finally(() => setIsCartSynced(true));
         }
 
         if (!user) {
-            dispatch(createUpdateCart([]));
-            hasSyncedCart.current = false;
+            localStorage.setItem('cart', JSON.stringify(items));
+            setIsCartSynced(false);
         }
-    }
-
-    useEffect(() => {
-        handleUserSetUp();
     }, [user, serverCart]);
 
     return (
