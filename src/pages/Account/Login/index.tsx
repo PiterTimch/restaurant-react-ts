@@ -1,16 +1,18 @@
 import {Link, useNavigate} from "react-router";
 import {Button, Form, type FormProps, Input, message} from "antd";
-import type {ILogin, ServerError} from "../../../services/types.ts";
+import type {ICartItem, ILogin, ServerError} from "../../../services/types.ts";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useLoginByGoogleMutation, useLoginMutation} from "../../../services/apiAccount.ts";
-// import {useDispatch} from "react-redux";
-// import {loginSuccess} from "../../../store/authSlice.ts";
 import {useGoogleLogin} from "@react-oauth/google";
+import {useCreateUpdateCartMutation, useGetCartQuery, useRemoveCartItemMutation} from "../../../services/apiCart.ts";
+
 
 const LoginPage: React.FC = () => {
 
     const navigate = useNavigate();
+
+    const { data: serverCart, isLoading: isLoadingCart } = useGetCartQuery();
 
     const [login, { isLoading: isLoginLoading, isError }] = useLoginMutation();
     const [loginByGoogle, { isLoading: isGoogleLoading }] = useLoginByGoogleMutation();
@@ -18,14 +20,58 @@ const LoginPage: React.FC = () => {
     const [form] = Form.useForm<ILogin>();
     const setServerErrors = useFormServerErrors(form);
 
-    // const dispatch = useDispatch();
+    const [createUpdateServerCart] = useCreateUpdateCartMutation();
+    const [removeServerCartItem] = useRemoveCartItemMutation();
+    console.log("Server cart", serverCart?.items);
 
+
+    const asyncCartLocalStorage = async () => {
+
+        // console.log("Server cart", serverCart?.items);
+        if (!serverCart?.items) return;
+
+        const combinedMap = new Map<number, ICartItem>();
+
+        const lcItems = JSON.parse(localStorage.getItem('cart')!);
+
+        if (lcItems){
+            for (const item of lcItems) {
+                if (!item.productId) continue;
+                combinedMap.set(item.productId, { ...item });
+            }
+        }
+        for (const item of serverCart.items) {
+            if (!item.productId) continue;
+
+            if (!combinedMap.has(item.productId)) {
+                combinedMap.set(item.productId, { ...item });
+            }
+            if (item.id) {
+                await removeServerCartItem({ id: item.id });
+            }
+        }
+        const newItems = Array.from(combinedMap.values());
+
+        for (const item of newItems) {
+            await createUpdateServerCart({
+                productId: item.productId!,
+                quantity: item.quantity!,
+            });
+        }
+        localStorage.removeItem('cart')
+    }
+
+    console.log("isLoadingCart", isLoadingCart, "serverCart", serverCart);
     const onFinish: FormProps<ILogin>['onFinish'] = async (values) => {
         try {
             await login(values).unwrap();
-            // dispatch(loginSuccess(result.token));
-            navigate('/');
-            // window.location.reload();
+            // console.log("Local store", serverCart?.items);
+
+            // await asyncCartLocalStorage();
+            // navigate('/');
+
+
+
         } catch (error) {
             const serverError = error as ServerError;
 
@@ -42,10 +88,10 @@ const LoginPage: React.FC = () => {
         {
             try {
                 await loginByGoogle(tokenResponse.access_token).unwrap();
-                //dispatch(loginSuccess(result.token));
-                navigate('/');
-                // window.location.reload();
+                // await asyncCartLocalStorage();
+                // navigate('/');
             } catch (error) {
+
                 const serverError = error as ServerError;
 
                 if (serverError?.status === 400 && serverError?.data?.errors) {
@@ -56,6 +102,8 @@ const LoginPage: React.FC = () => {
             }
         },
     });
+
+
 
     return (
         <div className="min-h-[600px] flex items-center justify-center px-4">

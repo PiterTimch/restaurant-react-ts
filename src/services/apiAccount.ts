@@ -38,8 +38,7 @@ export const apiAccount = createApi({
                     const result = await queryFulfilled;
                     if(result.data && result.data.token) {
                         dispatch(loginSuccess(result.data.token));
-                        dispatch(apiCart.util.invalidateTags(["Cart"]));
-
+                        dispatch(apiCart.util.invalidateTags(["Carts"]));
                     }
                 }catch (error) {
                     console.log("Login fail", error);
@@ -58,7 +57,7 @@ export const apiAccount = createApi({
                     const result = await queryFulfilled;
                     if(result.data && result.data.token) {
                         dispatch(loginSuccess(result.data.token));
-                        dispatch(apiCart.util.invalidateTags(["Cart"]));
+                        dispatch(apiCart.util.invalidateTags(["Carts"]));
                     }
                 }catch (error) {
                     console.log("Login fail", error);

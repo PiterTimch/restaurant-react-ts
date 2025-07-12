@@ -5,12 +5,23 @@ import {useDispatch} from "react-redux";
 import {useAppSelector} from "../../store";
 import { logout } from "../../store/authSlice";
 import CartDrawer from "../../components/Cart/CartDrewer";
+// import {useGetCartQuery} from "../../services/apiCart.ts";
 
 const UserLayout: React.FC = () => {
+
+    // const { data: serverCart } = useGetCartQuery();
+
+    const {items} = useAppSelector(state => state.cart);
 
     const {user} = useAppSelector(state => state.auth);
 
     const dispatch = useDispatch();
+
+    const logoutHandler = async () => {
+        // if (!serverCart?.items) return;
+        localStorage.setItem('cart', JSON.stringify(items));
+        dispatch(logout());
+    }
 
     return (
         <div className="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
@@ -44,7 +55,7 @@ const UserLayout: React.FC = () => {
                         )}
 
                         <Button
-                            onClick={() => dispatch(logout())}
+                            onClick={() => logoutHandler()}
                             className="bg-white text-orange-500 border-none hover:bg-orange-100"
                         >
                             Вихід

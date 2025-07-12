@@ -1,10 +1,6 @@
 import './App.css';
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router";
-import {useAppDispatch, useAppSelector} from "./store";
-// import {useCreateUpdateCartMutation, useGetCartItemsQuery, useRemoveCartItemMutation} from "./services/apiCart.ts";
-// import type {ICartItem} from "./services/types.ts";
-// import {createUpdateCart} from "./store/cartSlice.ts";
 
 const DashboardHome = React.lazy(() => import("./admin/pages/Dashboard/DashboardHome.tsx"));
 const AdminLayout = React.lazy(() => import("./layout/admin/AdminLayout.tsx"));
@@ -29,9 +25,12 @@ const UserEditPage = React.lazy(() => import("./admin/pages/Users/Edit"));
 
 const App: React.FC = () => {
 
-    const state = useAppSelector(state => state);
-
-    console.log("State: ", state);
+    // const { data: serverCart } = useGetCartQuery();
+    //
+    // console.log("Server cart: ", serverCart);
+    // const state = useAppSelector(state => state);
+    //
+    // console.log("State: ", state);
     /*
     const dispatch = useAppDispatch();
     const {user} = useAppSelector(state => state.auth);
@@ -40,8 +39,6 @@ const App: React.FC = () => {
     const { data: serverCart } = useGetCartItemsQuery();
     const [createUpdateServerCart] = useCreateUpdateCartMutation();
     const [removeServerCartItem] = useRemoveCartItemMutation();
-
-    const [isCartSynced, setIsCartSynced] = useState(false);
 
     const loadUserCart = async () => {
         if (!serverCart?.items) return;
