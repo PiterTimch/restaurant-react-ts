@@ -57,7 +57,7 @@ const CartDrawer: React.FC = () => {
 
     return (
         <>
-            <Badge count={items?.length} showZero>
+            <Badge count={items?.reduce(function (acc, obj) { return acc + obj.quantity!; }, 0)} showZero>
                 <Button onClick={() => setOpen(true)}>Кошик</Button>
             </Badge>
 
