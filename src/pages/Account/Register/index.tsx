@@ -24,6 +24,7 @@ const RegistrationPage: React.FC = () => {
             const result = await register(values).unwrap();
             dispatch(loginSuccess(result.token));
             navigate('/');
+            window.location.reload();
         } catch (error) {
             const serverError = error as ServerError;
 

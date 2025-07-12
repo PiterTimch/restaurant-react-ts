@@ -25,6 +25,7 @@ const LoginPage: React.FC = () => {
             const result = await login(values).unwrap();
             dispatch(loginSuccess(result.token));
             navigate('/');
+            window.location.reload();
         } catch (error) {
             const serverError = error as ServerError;
 
@@ -43,6 +44,7 @@ const LoginPage: React.FC = () => {
                 const result = await loginByGoogle(tokenResponse.access_token).unwrap();
                 dispatch(loginSuccess(result.token));
                 navigate('/');
+                window.location.reload();
             } catch (error) {
                 const serverError = error as ServerError;
 

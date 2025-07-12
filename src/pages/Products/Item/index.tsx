@@ -7,7 +7,6 @@ import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useAppDispatch, useAppSelector} from "../../../store";
 import {useCreateUpdateCartMutation} from "../../../services/apiCart.ts";
 import {createUpdateCart} from "../../../store/cartSlice.ts";
-//import {useCartCreateUpdate, useCartItems} from "../../../hooks/useCart.ts";
 
 const ProductItemPage: React.FC = () => {
     const { slug } = useParams();
@@ -21,11 +20,12 @@ const ProductItemPage: React.FC = () => {
     const {user} = useAppSelector(state => state.auth);
 
     const items = useAppSelector(state => state.cart.items);
+    const isInCart = items.some(item =>
+        product &&
+        item.productId === (selectedVariant ? selectedVariant.id : product.id)
+    );
 
     const [createUpdateServerCart] = useCreateUpdateCartMutation();
-
-    //const { refetch } = useCartItems();
-    //const [createUpdateItem] = useCartCreateUpdate(refetch);
 
     const handleAddToCart = async () => {
         if (!product) return;
@@ -175,7 +175,15 @@ const ProductItemPage: React.FC = () => {
                         </div>
                     </div>
 
-                    <button className={"bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-5 rounded-full"} onClick={handleAddToCart}>В кошик</button>
+                    <button
+                        disabled={isInCart}
+                        className={`${
+                            isInCart ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-700"
+                        } text-white font-bold py-2 px-4 mt-5 rounded-full`}
+                        onClick={!isInCart ? handleAddToCart : undefined}
+                    >
+                        {isInCart ? "Вже в кошику" : "В кошик"}
+                    </button>
                 </div>
             </div>
             {isLoading && <LoadingOverlay />}

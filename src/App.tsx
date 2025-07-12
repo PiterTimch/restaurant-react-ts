@@ -31,8 +31,8 @@ const App: React.FC = () => {
     const dispatch = useAppDispatch();
     const {user} = useAppSelector(state => state.auth);
     const {items} = useAppSelector(state => state.cart);
-    const { data: serverCart } = useGetCartItemsQuery();
 
+    const { data: serverCart } = useGetCartItemsQuery();
     const [createUpdateServerCart] = useCreateUpdateCartMutation();
     const [removeServerCartItem] = useRemoveCartItemMutation();
 
@@ -55,13 +55,7 @@ const App: React.FC = () => {
         for (const item of serverCart.items) {
             if (!item.productId) continue;
 
-            if (combinedMap.has(item.productId)) {
-                const existingItem = combinedMap.get(item.productId)!;
-                combinedMap.set(item.productId, {
-                    ...existingItem,
-                    quantity: (existingItem.quantity || 0) + (item.quantity || 0),
-                });
-            } else {
+            if (!combinedMap.has(item.productId)) {
                 combinedMap.set(item.productId, { ...item });
             }
 
@@ -86,7 +80,7 @@ const App: React.FC = () => {
 
     useEffect(() => {
         if (user && serverCart && !isCartSynced) {
-            loadUserCart().finally(() => setIsCartSynced(true));
+            loadUserCart().then(() => setIsCartSynced(true));
         }
 
         if (!user) {

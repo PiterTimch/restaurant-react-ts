@@ -11,8 +11,7 @@ const { Text } = Typography;
 const CartDrawer: React.FC = () => {
     const [open, setOpen] = useState(false);
 
-    const items = useAppSelector(state => state.cart.items);
-
+    const {items} = useAppSelector(state => state.cart);
     const {user} = useAppSelector(state => state.auth);
 
     const  dispatch = useAppDispatch();
