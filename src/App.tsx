@@ -1,10 +1,10 @@
 import './App.css';
-import React, {useEffect, useState} from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router";
 import {useAppDispatch, useAppSelector} from "./store";
-import {useCreateUpdateCartMutation, useGetCartItemsQuery, useRemoveCartItemMutation} from "./services/apiCart.ts";
-import type {ICartItem} from "./services/types.ts";
-import {createUpdateCart} from "./store/cartSlice.ts";
+// import {useCreateUpdateCartMutation, useGetCartItemsQuery, useRemoveCartItemMutation} from "./services/apiCart.ts";
+// import type {ICartItem} from "./services/types.ts";
+// import {createUpdateCart} from "./store/cartSlice.ts";
 
 const DashboardHome = React.lazy(() => import("./admin/pages/Dashboard/DashboardHome.tsx"));
 const AdminLayout = React.lazy(() => import("./layout/admin/AdminLayout.tsx"));
@@ -28,6 +28,11 @@ const UserListPage = React.lazy(() => import("./admin/pages/Users"));
 const UserEditPage = React.lazy(() => import("./admin/pages/Users/Edit"));
 
 const App: React.FC = () => {
+
+    const state = useAppSelector(state => state);
+
+    console.log("State: ", state);
+    /*
     const dispatch = useAppDispatch();
     const {user} = useAppSelector(state => state.auth);
     const {items} = useAppSelector(state => state.cart);
@@ -88,7 +93,7 @@ const App: React.FC = () => {
             setIsCartSynced(false);
         }
     }, [user, serverCart]);
-
+*/
     return (
         <Router>
             <React.Suspense fallback={<div>Завантаження...</div>}>
