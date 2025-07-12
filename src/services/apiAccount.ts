@@ -3,6 +3,8 @@ import {createBaseQuery} from "../utilities/createBaseQuery.ts";
 import type {ILogin, IRegister} from "./types.ts";
 //import {jwtDecode} from "jwt-decode";
 import {serialize} from "object-to-formdata";
+import {loginSuccess} from "../store/authSlice.ts";
+import {apiCart} from "./apiCart.ts";
 
 export  interface  IForgotPasswordRequest {
     email: string;
@@ -29,14 +31,39 @@ export const apiAccount = createApi({
                 url: 'login',
                 method: 'POST',
                 body: credentials
-            })
+            }),
+            async onQueryStarted(_, {dispatch, queryFulfilled })
+            {
+                try {
+                    const result = await queryFulfilled;
+                    if(result.data && result.data.token) {
+                        dispatch(loginSuccess(result.data.token));
+                        dispatch(apiCart.util.invalidateTags(["Cart"]));
+
+                    }
+                }catch (error) {
+                    console.log("Login fail", error);
+                }
+            }
         }),
         loginByGoogle: builder.mutation<{token: string}, string>({
             query: (token) => ({
                 url: 'google-login',
                 method: 'POST',
                 body: {token}
-            })
+            }),
+            async onQueryStarted(_, {dispatch, queryFulfilled })
+            {
+                try {
+                    const result = await queryFulfilled;
+                    if(result.data && result.data.token) {
+                        dispatch(loginSuccess(result.data.token));
+                        dispatch(apiCart.util.invalidateTags(["Cart"]));
+                    }
+                }catch (error) {
+                    console.log("Login fail", error);
+                }
+            }
         }),
         forgotPassword: builder.mutation<void, IForgotPasswordRequest>({
             query: (data) => ({

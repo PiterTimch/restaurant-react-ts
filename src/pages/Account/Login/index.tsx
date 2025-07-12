@@ -4,8 +4,8 @@ import type {ILogin, ServerError} from "../../../services/types.ts";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useLoginByGoogleMutation, useLoginMutation} from "../../../services/apiAccount.ts";
-import {useDispatch} from "react-redux";
-import {loginSuccess} from "../../../store/authSlice.ts";
+// import {useDispatch} from "react-redux";
+// import {loginSuccess} from "../../../store/authSlice.ts";
 import {useGoogleLogin} from "@react-oauth/google";
 
 const LoginPage: React.FC = () => {
@@ -18,14 +18,14 @@ const LoginPage: React.FC = () => {
     const [form] = Form.useForm<ILogin>();
     const setServerErrors = useFormServerErrors(form);
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     const onFinish: FormProps<ILogin>['onFinish'] = async (values) => {
         try {
-            const result = await login(values).unwrap();
-            dispatch(loginSuccess(result.token));
+            await login(values).unwrap();
+            // dispatch(loginSuccess(result.token));
             navigate('/');
-            window.location.reload();
+            // window.location.reload();
         } catch (error) {
             const serverError = error as ServerError;
 
@@ -41,10 +41,10 @@ const LoginPage: React.FC = () => {
         onSuccess: async (tokenResponse) =>
         {
             try {
-                const result = await loginByGoogle(tokenResponse.access_token).unwrap();
-                dispatch(loginSuccess(result.token));
+                await loginByGoogle(tokenResponse.access_token).unwrap();
+                //dispatch(loginSuccess(result.token));
                 navigate('/');
-                window.location.reload();
+                // window.location.reload();
             } catch (error) {
                 const serverError = error as ServerError;
 
