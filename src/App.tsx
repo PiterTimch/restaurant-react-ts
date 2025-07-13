@@ -1,6 +1,8 @@
 import './App.css';
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router";
+import UserOrderList from "./pages/Order/List";
+import PreOrderPage from "./pages/Order/PreOrder";
 
 const DashboardHome = React.lazy(() => import("./admin/pages/Dashboard/DashboardHome.tsx"));
 const AdminLayout = React.lazy(() => import("./layout/admin/AdminLayout.tsx"));
@@ -24,73 +26,6 @@ const UserListPage = React.lazy(() => import("./admin/pages/Users"));
 const UserEditPage = React.lazy(() => import("./admin/pages/Users/Edit"));
 
 const App: React.FC = () => {
-
-    // const { data: serverCart } = useGetCartQuery();
-    //
-    // console.log("Server cart: ", serverCart);
-    // const state = useAppSelector(state => state);
-    //
-    // console.log("State: ", state);
-    /*
-    const dispatch = useAppDispatch();
-    const {user} = useAppSelector(state => state.auth);
-    const {items} = useAppSelector(state => state.cart);
-
-    const { data: serverCart } = useGetCartItemsQuery();
-    const [createUpdateServerCart] = useCreateUpdateCartMutation();
-    const [removeServerCartItem] = useRemoveCartItemMutation();
-
-    const loadUserCart = async () => {
-        if (!serverCart?.items) return;
-
-        const combinedMap = new Map<number, ICartItem>();
-
-        const lcItems = JSON.parse(localStorage.getItem('cart')!);
-
-        if (lcItems){
-            for (const item of lcItems) {
-                if (!item.productId) continue;
-                combinedMap.set(item.productId, { ...item });
-            }
-        }
-
-        for (const item of serverCart.items) {
-            if (!item.productId) continue;
-
-            if (!combinedMap.has(item.productId)) {
-                combinedMap.set(item.productId, { ...item });
-            }
-
-            if (item.id) {
-                await removeServerCartItem({ id: item.id });
-            }
-        }
-
-        const newItems = Array.from(combinedMap.values());
-
-        for (const item of newItems) {
-            await createUpdateServerCart({
-                productId: item.productId!,
-                quantity: item.quantity!,
-            });
-        }
-
-        dispatch(createUpdateCart(newItems));
-
-        localStorage.removeItem('cart')
-    };
-
-    useEffect(() => {
-        if (user && serverCart && !isCartSynced) {
-            loadUserCart().then(() => setIsCartSynced(true));
-        }
-
-        if (!user) {
-            localStorage.setItem('cart', JSON.stringify(items));
-            setIsCartSynced(false);
-        }
-    }, [user, serverCart]);
-*/
     return (
         <Router>
             <React.Suspense fallback={<div>Завантаження...</div>}>
@@ -106,6 +41,11 @@ const App: React.FC = () => {
                         <Route path="products">
                             <Route path="list" element={<ProductsListPage />} />
                             <Route path="list/:slug" element={<ProductItemPage />} />
+                        </Route>
+
+                        <Route path="order">
+                            <Route path="list" element={<UserOrderList />} />
+                            <Route path="pre/:id" element={<PreOrderPage />} />
                         </Route>
                     </Route>
 

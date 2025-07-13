@@ -179,3 +179,27 @@ export  interface ICart {
     items: ICartItem[];
     totalPrice: number;
 }
+
+export interface IOrderItem {
+    priceBuy: number;
+    count: number;
+    productId: number;
+    productName: string;
+    productImage: string;
+}
+
+export interface IOrder {
+    id: number;
+    status: string;
+    dateCreated: string;
+    totalPrice: number;
+    orderItems: IOrderItem[];
+}
+
+export interface IOrderCreateRequest {
+    cartId: number;
+}
+
+export interface IOrderCreateResponse {
+    orderId:  number;
+}

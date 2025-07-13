@@ -36,7 +36,7 @@ const UserLayout: React.FC = () => {
                     <div className="flex items-center gap-4">
                         <CartDrawer />
 
-                        <Link to="/account" className="flex items-center gap-2">
+                        <Link to="/order/list" className="flex items-center gap-2">
                             <img
                                 src={user.image ? `${APP_ENV.IMAGES_50_URL}${user.image}` : '/images/user/default.png'}
                                 alt={user.name}

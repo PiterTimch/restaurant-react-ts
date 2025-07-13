@@ -9,6 +9,7 @@ import userSearchReducer from '../store/userSearchSlice.ts';
 import {apiCart} from "../services/apiCart.ts";
 import cartReducer from '../store/cartSlice.ts';
 import { setupListeners } from "@reduxjs/toolkit/query/react";
+import {apiOrder} from "../services/apiOrder.ts";
 
 export const store = configureStore({
     reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
         [apiProduct.reducerPath]: apiProduct.reducer,
         [apiUser.reducerPath]: apiUser.reducer,
         [apiCart.reducerPath]: apiCart.reducer,
+        [apiOrder.reducerPath]: apiOrder.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -28,7 +30,8 @@ export const store = configureStore({
             apiAccount.middleware,
             apiProduct.middleware,
             apiUser.middleware,
-            apiCart.middleware)
+            apiCart.middleware,
+            apiOrder.middleware)
 })
 
 setupListeners(store.dispatch);
