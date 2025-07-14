@@ -4,7 +4,9 @@ import {useState} from "react";
 import type {ICartItem, ICreateUpdateCartItem, IRemoveCartItem} from "../../../services/types.ts";
 import {APP_ENV} from "../../../env";
 import {createUpdateCart} from "../../../store/cartSlice.ts";
-import {useCreateUpdateCartMutation, useRemoveCartItemMutation} from "../../../services/apiCart.ts";
+import {useCreateUpdateCartMutation, useGetCartQuery, useRemoveCartItemMutation} from "../../../services/apiCart.ts";
+import {useCreateOrderMutation} from "../../../services/apiOrder.ts";
+import {useNavigate} from "react-router-dom";
 
 const { Text } = Typography;
 
@@ -18,6 +20,27 @@ const CartDrawer: React.FC = () => {
 
     const [removeServerCartItem] = useRemoveCartItemMutation();
     const [createUpdateServerCart] = useCreateUpdateCartMutation();
+    const {data: cart} = useGetCartQuery();
+
+    const [createOrder] = useCreateOrderMutation();
+
+    const navigate = useNavigate();
+
+    const onFinish = async () => {
+        console.log(cart);
+
+        if (!cart) {
+            return;
+        }
+
+        try {
+            const result = await createOrder({ cartId: cart.id }).unwrap();
+            navigate(`/order/pre/${result.orderId}`);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
 
     const handleEditCart = (prop : ICreateUpdateCartItem) => {
         const newItems = items.map(item => {
@@ -128,8 +151,8 @@ const CartDrawer: React.FC = () => {
                 <div
                     style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
                 >
-                    <Button type="primary" disabled={items.length === 0}>
-                        Оформити замовлення
+                    <Button type="primary" onClick={onFinish} disabled={items.length === 0}>
+                        Оформити
                     </Button>
                 </div>
             </Drawer>

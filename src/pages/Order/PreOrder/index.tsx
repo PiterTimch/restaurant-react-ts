@@ -3,7 +3,6 @@ import { useGetByIdQuery } from "../../../services/apiOrder.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import { APP_ENV } from "../../../env";
 import { Collapse, Button, Badge } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
 const { Panel } = Collapse;
@@ -64,13 +63,6 @@ const PreOrderPage: React.FC = () => {
                                 <div className="flex-grow">
                                     <div className="flex items-center gap-2">
                                         <strong>{item.productName}</strong>
-                                        <Link to={`/products/list/${item.productSlug}`}>
-                                            <Button
-                                                size="small"
-                                                icon={<EyeOutlined />}
-                                                className="m-0"
-                                            />
-                                        </Link>
                                     </div>
                                     <div className="text-gray-500 text-sm">
                                         Кількість: {item.count} × {item.priceBuy} грн
@@ -88,6 +80,12 @@ const PreOrderPage: React.FC = () => {
                     </div>
                 </Panel>
             </Collapse>
+
+            <Link to={`/order/delivery/${order.id.toString()}`}>
+                <Button
+                    content="Оформити"
+                />
+            </Link>
         </div>
     );
 };

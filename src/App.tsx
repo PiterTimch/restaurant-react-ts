@@ -3,6 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router";
 import UserOrderList from "./pages/Order/List";
 import PreOrderPage from "./pages/Order/PreOrder";
+import DeliveryInfoPage from "./pages/Order/DeliveryInfo";
 
 const DashboardHome = React.lazy(() => import("./admin/pages/Dashboard/DashboardHome.tsx"));
 const AdminLayout = React.lazy(() => import("./layout/admin/AdminLayout.tsx"));
@@ -46,6 +47,7 @@ const App: React.FC = () => {
                         <Route path="order">
                             <Route path="list" element={<UserOrderList />} />
                             <Route path="pre/:id" element={<PreOrderPage />} />
+                            <Route path="delivery/:id" element={<DeliveryInfoPage />} />
                         </Route>
                     </Route>
 

@@ -176,6 +176,7 @@ export interface IRemoveCartItem {
 }
 
 export  interface ICart {
+    id: number;
     items: ICartItem[];
     totalPrice: number;
 }
@@ -194,6 +195,7 @@ export interface IOrder {
     dateCreated: string;
     totalPrice: number;
     orderItems: IOrderItem[];
+    deliveryInfo?: IDeliveryInfoItem;
 }
 
 export interface IOrderCreateRequest {
@@ -202,4 +204,37 @@ export interface IOrderCreateRequest {
 
 export interface IOrderCreateResponse {
     orderId:  number;
+}
+
+export interface ICity {
+    id: number;
+    name: string;
+}
+
+export interface IPostDepartment {
+    id: number;
+    name: string;
+}
+
+export interface IPaymentType {
+    id: number;
+    name: string;
+}
+
+export interface IDeliveryInfoItem {
+    id: number;
+    recipientName: string;
+    phoneNumber: string;
+    city: ICity;
+    postDepartment: IPostDepartment;
+    paymentType: IPaymentType;
+}
+
+export interface IDeliveryInfoCreate {
+    recipientName: string;
+    phoneNumber: string;
+    cityId: number;
+    postDepartmentId: number;
+    paymentTypeId: number;
+    orderId: number;
 }

@@ -4,6 +4,7 @@ import { Collapse, Button, Badge } from "antd";
 import {APP_ENV} from "../../../env";
 import { Link } from "react-router-dom";
 import { EyeOutlined } from "@ant-design/icons";
+import type {IOrder} from "../../../services/types.ts";
 
 const { Panel } = Collapse;
 
@@ -80,12 +81,25 @@ const UserOrderList: React.FC = () => {
                                             Кількість: {item.count} × {item.priceBuy} грн
                                         </div>
                                     </div>
+
                                     <div className="font-semibold whitespace-nowrap pl-4">
                                         {item.count * item.priceBuy} грн
                                     </div>
                                 </li>
                             ))}
                         </ul>
+
+                        {/* Ось тут deliveryInfo — ПІСЛЯ списку товарів */}
+                        {order.deliveryInfo && (
+                            <div className="mt-6 p-4 border rounded bg-gray-50 dark:bg-gray-900 text-sm">
+                                <h3 className="text-base font-semibold mb-2">Інформація про доставку</h3>
+                                <p><strong>Отримувач:</strong> {order.deliveryInfo.recipientName}</p>
+                                <p><strong>Телефон:</strong> {order.deliveryInfo.phoneNumber}</p>
+                                <p><strong>Місто:</strong> {order.deliveryInfo.city.name}</p>
+                                <p><strong>Відділення пошти:</strong> {order.deliveryInfo.postDepartment.name}</p>
+                                <p><strong>Тип оплати:</strong> {order.deliveryInfo.paymentType.name}</p>
+                            </div>
+                        )}
 
                         <div className="text-right pt-4 text-lg font-semibold border-t mt-4">
                             Загальна сума: {order.totalPrice} грн
