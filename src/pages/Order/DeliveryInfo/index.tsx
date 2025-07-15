@@ -52,7 +52,14 @@ const DeliveryInfoPage: React.FC = () => {
                     <Form.Item<IDeliveryInfoCreate>
                         label="Ім'я отримувача"
                         name="recipientName"
-                        rules={[{required: true, message: 'Вкажіть імʼя отримувача'}]}
+                        rules={[
+                            { required: true, message: 'Вкажіть імʼя отримувача' },
+                            { min: 2, message: 'Імʼя має містити щонайменше 2 символи' },
+                            {
+                                pattern: /^[А-Яа-яA-Za-zІіЇїЄєҐґ\s'-]+$/,
+                                message: 'Імʼя може містити лише літери, пробіли, апострофи та дефіси',
+                            },
+                        ]}
                     >
                         <Input className="dark:bg-gray-700 dark:border-gray-600 dark:text-white/90" />
                     </Form.Item>
@@ -60,9 +67,18 @@ const DeliveryInfoPage: React.FC = () => {
                     <Form.Item<IDeliveryInfoCreate>
                         label="Номер телефону"
                         name="phoneNumber"
-                        rules={[{required: true, message: 'Вкажіть номер телефону'}]}
+                        rules={[
+                            { required: true, message: 'Вкажіть номер телефону' },
+                            {
+                                pattern: /^\+380\d{9}$/,
+                                message: 'Номер телефону має бути у форматі +380XXXXXXXXX',
+                            },
+                        ]}
                     >
-                        <Input className="dark:bg-gray-700 dark:border-gray-600 dark:text-white/90" />
+                        <Input
+                            className="dark:bg-gray-700 dark:border-gray-600 dark:text-white/90"
+                            placeholder="+380XXXXXXXXX"
+                        />
                     </Form.Item>
 
                     <Form.Item<IDeliveryInfoCreate>

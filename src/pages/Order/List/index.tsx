@@ -89,8 +89,7 @@ const UserOrderList: React.FC = () => {
                             ))}
                         </ul>
 
-                        {/* Ось тут deliveryInfo — ПІСЛЯ списку товарів */}
-                        {order.deliveryInfo && (
+                        {order.deliveryInfo ? (
                             <div className="mt-6 p-4 border rounded bg-gray-50 dark:bg-gray-900 text-sm">
                                 <h3 className="text-base font-semibold mb-2">Інформація про доставку</h3>
                                 <p><strong>Отримувач:</strong> {order.deliveryInfo.recipientName}</p>
@@ -98,6 +97,16 @@ const UserOrderList: React.FC = () => {
                                 <p><strong>Місто:</strong> {order.deliveryInfo.city.name}</p>
                                 <p><strong>Відділення пошти:</strong> {order.deliveryInfo.postDepartment.name}</p>
                                 <p><strong>Тип оплати:</strong> {order.deliveryInfo.paymentType.name}</p>
+                            </div>
+                        ) : order.status.toLowerCase() === 'нове' && (
+                            <div className="mt-6 p-4 border rounded bg-yellow-50 dark:bg-gray-900 text-sm flex items-center justify-between">
+                                <div>
+                                    <p className="mb-1 font-medium text-yellow-700 dark:text-yellow-400">Інформація про доставку ще не вказана.</p>
+                                    <p className="text-sm text-gray-700 dark:text-gray-300">Для відправлення замовлення, будь ласка, додайте дані доставки.</p>
+                                </div>
+                                <Link to={`/order/delivery/${order.id.toString()}`}>
+                                    <Button type="primary">Додати доставку</Button>
+                                </Link>
                             </div>
                         )}
 

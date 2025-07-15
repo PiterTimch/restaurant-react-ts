@@ -35,6 +35,11 @@ const CartDrawer: React.FC = () => {
 
         try {
             const result = await createOrder({ cartId: cart.id }).unwrap();
+
+            items.forEach(item => {
+                handleRemoveCart({id: item.productId!});
+            })
+
             navigate(`/order/pre/${result.orderId}`);
         } catch (err) {
             console.error(err);

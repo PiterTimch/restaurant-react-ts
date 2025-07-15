@@ -1,16 +1,14 @@
-import {Link, useNavigate} from "react-router";
+import {Link} from "react-router";
 import {Button, Form, type FormProps, Input, message} from "antd";
-import type {ICartItem, ILogin, ServerError} from "../../../services/types.ts";
+import type { ILogin, ServerError} from "../../../services/types.ts";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useLoginByGoogleMutation, useLoginMutation} from "../../../services/apiAccount.ts";
 import {useGoogleLogin} from "@react-oauth/google";
-import {useCreateUpdateCartMutation, useGetCartQuery, useRemoveCartItemMutation} from "../../../services/apiCart.ts";
+import {useGetCartQuery} from "../../../services/apiCart.ts";
 
 
 const LoginPage: React.FC = () => {
-
-    const navigate = useNavigate();
 
     const { data: serverCart, isLoading: isLoadingCart } = useGetCartQuery();
 
@@ -20,46 +18,7 @@ const LoginPage: React.FC = () => {
     const [form] = Form.useForm<ILogin>();
     const setServerErrors = useFormServerErrors(form);
 
-    const [createUpdateServerCart] = useCreateUpdateCartMutation();
-    const [removeServerCartItem] = useRemoveCartItemMutation();
     console.log("Server cart", serverCart?.items);
-
-
-    const asyncCartLocalStorage = async () => {
-
-        // console.log("Server cart", serverCart?.items);
-        if (!serverCart?.items) return;
-
-        const combinedMap = new Map<number, ICartItem>();
-
-        const lcItems = JSON.parse(localStorage.getItem('cart')!);
-
-        if (lcItems){
-            for (const item of lcItems) {
-                if (!item.productId) continue;
-                combinedMap.set(item.productId, { ...item });
-            }
-        }
-        for (const item of serverCart.items) {
-            if (!item.productId) continue;
-
-            if (!combinedMap.has(item.productId)) {
-                combinedMap.set(item.productId, { ...item });
-            }
-            if (item.id) {
-                await removeServerCartItem({ id: item.id });
-            }
-        }
-        const newItems = Array.from(combinedMap.values());
-
-        for (const item of newItems) {
-            await createUpdateServerCart({
-                productId: item.productId!,
-                quantity: item.quantity!,
-            });
-        }
-        localStorage.removeItem('cart')
-    }
 
     console.log("isLoadingCart", isLoadingCart, "serverCart", serverCart);
     const onFinish: FormProps<ILogin>['onFinish'] = async (values) => {

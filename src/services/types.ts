@@ -186,6 +186,7 @@ export interface IOrderItem {
     count: number;
     productId: number;
     productName: string;
+    productSlug: string;
     productImage: string;
 }
 

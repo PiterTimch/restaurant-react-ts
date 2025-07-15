@@ -82,9 +82,9 @@ const PreOrderPage: React.FC = () => {
             </Collapse>
 
             <Link to={`/order/delivery/${order.id.toString()}`}>
-                <Button
-                    content="Оформити"
-                />
+                <Button type="primary" size="large">
+                    Оформити
+                </Button>
             </Link>
         </div>
     );
