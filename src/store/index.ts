@@ -7,15 +7,15 @@ import {apiProduct} from "../services/apiProduct.ts";
 import {apiUser} from "../services/apiUser.ts";
 import userSearchReducer from '../store/userSearchSlice.ts';
 import {apiCart} from "../services/apiCart.ts";
-import cartReducer from '../store/cartSlice.ts';
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 import {apiOrder} from "../services/apiOrder.ts";
+import localCarReducer from './localCartSlice.ts';
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
         userSearch: userSearchReducer,
-        cart: cartReducer,
+        localCart: localCarReducer,
         [apiCategory.reducerPath]: apiCategory.reducer,
         [apiAccount.reducerPath]: apiAccount.reducer,
         [apiProduct.reducerPath]: apiProduct.reducer,

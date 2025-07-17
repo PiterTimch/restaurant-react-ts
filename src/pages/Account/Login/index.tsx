@@ -18,18 +18,10 @@ const LoginPage: React.FC = () => {
     const [form] = Form.useForm<ILogin>();
     const setServerErrors = useFormServerErrors(form);
 
-    console.log("Server cart", serverCart?.items);
-
     console.log("isLoadingCart", isLoadingCart, "serverCart", serverCart);
     const onFinish: FormProps<ILogin>['onFinish'] = async (values) => {
         try {
             await login(values).unwrap();
-            // console.log("Local store", serverCart?.items);
-
-            // await asyncCartLocalStorage();
-            // navigate('/');
-
-
 
         } catch (error) {
             const serverError = error as ServerError;

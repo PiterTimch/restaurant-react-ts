@@ -5,6 +5,9 @@ import type {ILogin, IRegister} from "./types.ts";
 import {serialize} from "object-to-formdata";
 import {loginSuccess} from "../store/authSlice.ts";
 import {apiCart} from "./apiCart.ts";
+import type {Dispatch} from "@reduxjs/toolkit";
+import type {RootState} from "../store";
+import {clearCart} from "../store/localCartSlice.ts";
 
 export  interface  IForgotPasswordRequest {
     email: string;
@@ -21,6 +24,28 @@ export  interface IResetPasswordRequest {
     email: string;
 }
 
+const handleAuthSuccess = async (
+    queryFulfilled: Promise<{ data: {token: string} }>,
+    dispatch: Dispatch,
+    getState: () => RootState
+) => {
+    try {
+        const { data } = await queryFulfilled;
+        if (data?.token) {
+            dispatch(loginSuccess(data.token));
+
+            const localCart = getState().localCart.items;
+            if (localCart.length > 0) {
+                await dispatch(apiCart.endpoints.addToCartsRange.initiate(localCart)).unwrap();
+            }
+
+            dispatch(clearCart());
+        }
+    } catch (error) {
+        console.error('Auth error:', error);
+    }
+};
+
 export const apiAccount = createApi({
     reducerPath: 'api/account',
     baseQuery: createBaseQuery('Account'),
@@ -32,18 +57,8 @@ export const apiAccount = createApi({
                 method: 'POST',
                 body: credentials
             }),
-            async onQueryStarted(_, {dispatch, queryFulfilled })
-            {
-                try {
-                    const result = await queryFulfilled;
-                    if(result.data && result.data.token) {
-                        dispatch(loginSuccess(result.data.token));
-                        dispatch(apiCart.util.invalidateTags(["Carts"]));
-                    }
-                }catch (error) {
-                    console.log("Login fail", error);
-                }
-            }
+            onQueryStarted: async (_arg, { dispatch, getState, queryFulfilled }) =>
+                handleAuthSuccess(queryFulfilled, dispatch, getState)
         }),
         loginByGoogle: builder.mutation<{token: string}, string>({
             query: (token) => ({
@@ -51,18 +66,8 @@ export const apiAccount = createApi({
                 method: 'POST',
                 body: {token}
             }),
-            async onQueryStarted(_, {dispatch, queryFulfilled })
-            {
-                try {
-                    const result = await queryFulfilled;
-                    if(result.data && result.data.token) {
-                        dispatch(loginSuccess(result.data.token));
-                        dispatch(apiCart.util.invalidateTags(["Carts"]));
-                    }
-                }catch (error) {
-                    console.log("Login fail", error);
-                }
-            }
+            onQueryStarted: async (_arg, { dispatch, getState, queryFulfilled }) =>
+                handleAuthSuccess(queryFulfilled, dispatch, getState)
         }),
         forgotPassword: builder.mutation<void, IForgotPasswordRequest>({
             query: (data) => ({

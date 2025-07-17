@@ -9,9 +9,7 @@ import CartDrawer from "../../components/Cart/CartDrewer";
 
 const UserLayout: React.FC = () => {
 
-    // const { data: serverCart } = useGetCartQuery();
-
-    const {items} = useAppSelector(state => state.cart);
+    const {items} = useAppSelector(state => state.localCart);
 
     const {user} = useAppSelector(state => state.auth);
 

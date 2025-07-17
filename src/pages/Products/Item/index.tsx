@@ -1,12 +1,12 @@
 import {useEffect, useState} from "react";
 import {useGetProductBySlugQuery} from "../../../services/apiProduct.ts";
 import {useParams} from "react-router";
-import type {ICartItem, IProductVariant} from "../../../services/types.ts";
+import type {IProductVariant} from "../../../services/types.ts";
 import {APP_ENV} from "../../../env";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useAppDispatch, useAppSelector} from "../../../store";
 import {useCreateUpdateCartMutation} from "../../../services/apiCart.ts";
-import {createUpdateCart} from "../../../store/cartSlice.ts";
+import {addItem, type ICartItem} from "../../../store/localCartSlice.ts";
 
 const ProductItemPage: React.FC = () => {
     const { slug } = useParams();
@@ -19,7 +19,7 @@ const ProductItemPage: React.FC = () => {
 
     const {user} = useAppSelector(state => state.auth);
 
-    const items = useAppSelector(state => state.cart.items);
+    const {items} = useAppSelector(state => state.localCart);
     const isInCart = items.some(item =>
         product &&
         item.productId === (selectedVariant ? selectedVariant.id : product.id)
@@ -66,7 +66,7 @@ const ProductItemPage: React.FC = () => {
                 quantity: newItem.quantity!,
             });
         }
-        dispatch(createUpdateCart(newItems));
+        dispatch(addItem(newItem));
 
         //await createUpdateItem(item);
     };
