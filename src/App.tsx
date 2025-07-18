@@ -1,9 +1,6 @@
 import './App.css';
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router";
-import UserOrderList from "./pages/Order/List";
-import PreOrderPage from "./pages/Order/PreOrder";
-import DeliveryInfoPage from "./pages/Order/DeliveryInfo";
 
 const DashboardHome = React.lazy(() => import("./admin/pages/Dashboard/DashboardHome.tsx"));
 const AdminLayout = React.lazy(() => import("./layout/admin/AdminLayout.tsx"));
@@ -25,6 +22,8 @@ const ForgotSuccessPage = React.lazy(() => import("./pages/Account/ForgotSuccess
 const ResetPasswordPage = React.lazy(() => import("./pages/Account/ResetPassword"));
 const UserListPage = React.lazy(() => import("./admin/pages/Users"));
 const UserEditPage = React.lazy(() => import("./admin/pages/Users/Edit"));
+const UserOrderList = React.lazy(() => import("./pages/Order/List"));
+const CreateOrderPage = React.lazy(() => import("./pages/Order/Create"));
 
 const App: React.FC = () => {
     return (
@@ -46,8 +45,7 @@ const App: React.FC = () => {
 
                         <Route path="order">
                             <Route path="list" element={<UserOrderList />} />
-                            <Route path="pre/:id" element={<PreOrderPage />} />
-                            <Route path="delivery/:id" element={<DeliveryInfoPage />} />
+                            <Route path="create" element={<CreateOrderPage />} />
                         </Route>
                     </Route>
 

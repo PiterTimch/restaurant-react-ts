@@ -1,4 +1,4 @@
-import {Link} from "react-router";
+import {Link, useNavigate} from "react-router";
 import {Button, Form, type FormProps, Input, message} from "antd";
 import type { ILogin, ServerError} from "../../../services/types.ts";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
@@ -18,11 +18,14 @@ const LoginPage: React.FC = () => {
     const [form] = Form.useForm<ILogin>();
     const setServerErrors = useFormServerErrors(form);
 
+    const navigate = useNavigate();
+
     console.log("isLoadingCart", isLoadingCart, "serverCart", serverCart);
     const onFinish: FormProps<ILogin>['onFinish'] = async (values) => {
         try {
             await login(values).unwrap();
 
+            navigate('/');
         } catch (error) {
             const serverError = error as ServerError;
 
@@ -40,7 +43,7 @@ const LoginPage: React.FC = () => {
             try {
                 await loginByGoogle(tokenResponse.access_token).unwrap();
                 // await asyncCartLocalStorage();
-                // navigate('/');
+                navigate('/');
             } catch (error) {
 
                 const serverError = error as ServerError;

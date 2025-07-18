@@ -4,6 +4,7 @@ import {useState} from "react";
 import {type ICartItem} from "../../../store/localCartSlice.ts";
 import {APP_ENV} from "../../../env";
 import {useCart} from "../../../hooks/useCart.ts";
+import {Link} from "react-router";
 
 const {Text} = Typography;
 
@@ -88,9 +89,12 @@ const CartDrawer: React.FC = () => {
                 <div
                     style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}
                 >
-                    <Button type="primary" disabled={cart.length === 0}>
-                        Оформити замовлення
-                    </Button>
+                    <Link to={'/order/create'}>
+                        <Button type="primary" disabled={cart.length === 0} onClick={() => setOpen(false)}>
+                            Оформити замовлення
+                        </Button>
+                    </Link>
+
                 </div>
             </Drawer>
         </>

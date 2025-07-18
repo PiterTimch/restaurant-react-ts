@@ -154,33 +154,6 @@ export interface IUserDelete {
     id: number;
 }
 
-// export interface ICartItem {
-//     id?: number;
-//     productId?: number;
-//     categoryId?: number;
-//     name?: string;
-//     categoryName?: string;
-//     quantity?: number;
-//     price?: number;
-//     sizeName?: string;
-//     imageName?: string;
-// }
-//
-// export interface ICreateUpdateCartItem {
-//     productId: number;
-//     quantity: number;
-// }
-//
-// export interface IRemoveCartItem {
-//     id: number;
-// }
-//
-// export  interface ICart {
-//     id: number;
-//     items: ICartItem[];
-//     totalPrice: number;
-// }
-
 export interface IOrderItem {
     priceBuy: number;
     count: number;
@@ -197,14 +170,6 @@ export interface IOrder {
     totalPrice: number;
     orderItems: IOrderItem[];
     deliveryInfo?: IDeliveryInfoItem;
-}
-
-export interface IOrderCreateRequest {
-    cartId: number;
-}
-
-export interface IOrderCreateResponse {
-    orderId:  number;
 }
 
 export interface ICity {
@@ -237,5 +202,14 @@ export interface IDeliveryInfoCreate {
     cityId: number;
     postDepartmentId: number;
     paymentTypeId: number;
-    orderId: number;
+}
+
+export interface IGetCitiesRequest {
+    itemPerPage:  number;
+    name: string;
+}
+
+export interface IGetDepartmentsRequest {
+    itemPerPage:  number;
+    cityName: string;
 }

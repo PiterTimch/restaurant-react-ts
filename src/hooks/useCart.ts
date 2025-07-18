@@ -31,7 +31,7 @@ export const useCart = (isAuth: boolean) => {
     };
 
     return {
-        cart: isAuth ? remoteCart ?? [] : localCart,
+        cart: isAuth ? remoteCart! ?? [] : localCart as ICartItem[],
         addToCart,
         removeFromCart,
         ...remote,

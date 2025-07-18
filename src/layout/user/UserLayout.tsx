@@ -1,4 +1,4 @@
-import {Link, Outlet} from "react-router";
+import {Link, Outlet, useNavigate} from "react-router";
 import {Button} from "antd";
 import {APP_ENV} from "../../env";
 import {useDispatch} from "react-redux";
@@ -15,10 +15,13 @@ const UserLayout: React.FC = () => {
 
     const dispatch = useDispatch();
 
+    const navigate = useNavigate();
+
     const logoutHandler = async () => {
         // if (!serverCart?.items) return;
         localStorage.setItem('cart', JSON.stringify(items));
         dispatch(logout());
+        navigate('/');
     }
 
     return (
