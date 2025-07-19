@@ -5,13 +5,16 @@ import {useDispatch} from "react-redux";
 import {useAppSelector} from "../../store";
 import { logout } from "../../store/authSlice";
 import CartDrawer from "../../components/Cart/CartDrewer";
+import {useCart} from "../../hooks/useCart.ts";
+import { apiCart } from "../../services/apiCart.ts";
+import {addItem} from "../../store/localCartSlice.ts";
 // import {useGetCartQuery} from "../../services/apiCart.ts";
 
 const UserLayout: React.FC = () => {
 
-    const {items} = useAppSelector(state => state.localCart);
-
     const {user} = useAppSelector(state => state.auth);
+
+    const { cart } = useCart(user!=null);
 
     const dispatch = useDispatch();
 
@@ -19,9 +22,16 @@ const UserLayout: React.FC = () => {
 
     const logoutHandler = async () => {
         // if (!serverCart?.items) return;
-        localStorage.setItem('cart', JSON.stringify(items));
+
+        const serverCart = [...cart];
         dispatch(logout());
-        navigate('/');
+        console.log('Server cart', serverCart);
+        dispatch(apiCart.util.resetApiState());
+        console.log('Server cart', serverCart);
+        serverCart.forEach(item => {
+            dispatch(addItem(item));
+        });
+        navigate('/')
     }
 
     return (

@@ -4,9 +4,9 @@ import {useParams} from "react-router";
 import type {IProductVariant} from "../../../services/types.ts";
 import {APP_ENV} from "../../../env";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import {useAppDispatch, useAppSelector} from "../../../store";
-import {useCreateUpdateCartMutation} from "../../../services/apiCart.ts";
-import {addItem, type ICartItem} from "../../../store/localCartSlice.ts";
+import {useAppSelector} from "../../../store";
+import {type ICartItem} from "../../../store/localCartSlice.ts";
+import {useCart} from "../../../hooks/useCart.ts";
 
 const ProductItemPage: React.FC = () => {
     const { slug } = useParams();
@@ -15,60 +15,34 @@ const ProductItemPage: React.FC = () => {
     const [selectedVariant, setSelectedVariant] = useState<IProductVariant | null>(null);
     const [mainImage, setMainImage] = useState<string | null>(null);
 
-    const  dispatch = useAppDispatch();
-
     const {user} = useAppSelector(state => state.auth);
 
-    const {items} = useAppSelector(state => state.localCart);
-    const isInCart = items.some(item =>
+    const {cart, addToCart } = useCart(user!=null);
+
+    const isInCart = cart.some(item =>
         product &&
         item.productId === (selectedVariant ? selectedVariant.id : product.id)
     );
 
-    const [createUpdateServerCart] = useCreateUpdateCartMutation();
-
     const handleAddToCart = async () => {
         if (!product) return;
 
+        console.log("product add", product);
+
         const newItem: ICartItem = {
-            productId: selectedVariant ? selectedVariant.id : product.id,
+            id: product.id,
+            productId: product.id,
             quantity: 1,
-            sizeName: selectedVariant?.productSize?.name ?? "",
-            price: selectedVariant?.price ?? product.price,
-            imageName: selectedVariant?.productImages?.[0]?.name ?? product.productImages?.[0]?.name ?? "",
-            categoryId: product.category.id,
-            categoryName: product.category.name,
+            sizeName: product.productSize?.name ?? "",
+            price: product.price,
+            imageName: product.productImages?.[0]?.name ?? "",
+            categoryId: 0,
+            categoryName: "",
             name: product.name,
         };
 
-        let newItems : ICartItem[] = items.length > 0 ? [...items] : [];
+        await addToCart(newItem);
 
-        if (!newItems) {
-            newItems = [];
-        }
-        const index = newItems!.findIndex(cartItem => cartItem.productId === newItem.productId);
-        if (index >= 0) {
-            newItems[index].quantity! = newItem.quantity!;
-
-            if (newItems[index].quantity! <= 0) {
-                newItems.splice(index, 1);
-            }
-        } else {
-            newItems.push(newItem);
-        }
-
-        if (!user) {
-            localStorage.setItem('cart', JSON.stringify(newItems));
-        }
-        else {
-            createUpdateServerCart({
-                productId: newItem.productId!,
-                quantity: newItem.quantity!,
-            });
-        }
-        dispatch(addItem(newItem));
-
-        //await createUpdateItem(item);
     };
 
     useEffect(() => {

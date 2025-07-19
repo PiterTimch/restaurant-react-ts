@@ -15,6 +15,12 @@ const { Panel } = Collapse;
 
 import { Select } from "antd";
 import type {IDeliveryInfoCreate} from "../../../services/types.ts";
+import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
+import {IMaskInput} from "react-imask";
+import {apiCart} from "../../../services/apiCart.ts";
+import {useDispatch} from "react-redux";
+
+
 
 const CreateOrderPage : React.FC = () => {
 
@@ -22,6 +28,8 @@ const CreateOrderPage : React.FC = () => {
     const {cart} = useCart(user != null);
 
     const [form] = Form.useForm<IDeliveryInfoCreate>();
+
+    const dispatch = useDispatch();
 
     const [citySearch, setCitySearch] = useState<string>("");
     const [selectedCityId, setSelectedCityId] = useState<number | null>(null);
@@ -35,7 +43,7 @@ const CreateOrderPage : React.FC = () => {
             : { itemPerPage: 0, cityName: "" }
     );
     const { data: paymentTypes } = useGetAllPaymentTypesQuery();
-    const [createOrder, { isError }] = useCreateOrderMutation();
+    const [createOrder, { isLoading, isError }] = useCreateOrderMutation();
 
     const navigate = useNavigate();
 
@@ -46,12 +54,14 @@ const CreateOrderPage : React.FC = () => {
             await createOrder({
                 recipientName: values.recipientName,
                 phoneNumber: values.phoneNumber,
-                cityId: selectedCityId,
-                postDepartmentId: selectedDepartmentId,
-                paymentTypeId: selectedPaymentId,
+                cityId: selectedCityId!,
+                postDepartmentId: selectedDepartmentId!,
+                paymentTypeId: selectedPaymentId!,
             }).unwrap();
 
             form.resetFields();
+
+            dispatch(apiCart.util.resetApiState());
 
             navigate('/');
         } catch(err) {
@@ -112,13 +122,19 @@ const CreateOrderPage : React.FC = () => {
                 </Panel>
             </Collapse>
 
-            <Form form={form} layout={"vertical"} className="mt-6" onFinish={handleSubmit} initialValues={{
-                recipientName: user.name ?? ""
-            }}>
+            <Form
+                form={form}
+                layout={"vertical"}
+                className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4"
+                onFinish={handleSubmit}
+                initialValues={{
+                    recipientName: user.name ?? "",
+                }}
+            >
                 <Form.Item
-                label="ПІБ отримувача"
-                name="recipientName"
-                rules={[{ required: true, message: "Введіть ПІБ отримувача" }]}
+                    label="ПІБ отримувача"
+                    name="recipientName"
+                    rules={[{ required: true, message: "Введіть ПІБ отримувача" }]}
                 >
                     <Input />
                 </Form.Item>
@@ -126,12 +142,25 @@ const CreateOrderPage : React.FC = () => {
                 <Form.Item
                     label="Номер телефону"
                     name="phoneNumber"
-                    rules={[{ required: true, message: "Введіть номер телефону" }]}
+                    rules={[
+                        { required: true, message: "Введіть номер телефону" },
+                        {
+                            pattern: /^\+380\d{9}$/,
+                            message: "Формат телефону має бути +380XXXXXXXXX",
+                        },
+                    ]}
                 >
-                    <Input />
+                    <IMaskInput
+                        mask="+380000000000"
+                        lazy={false}
+                        unmask={false}
+                        placeholder="+380_________"
+                        className="ant-input w-full"
+                        onAccept={(value) => form.setFieldsValue({ phoneNumber: value })}
+                    />
                 </Form.Item>
 
-                <Form.Item label="Місто" required>
+                <Form.Item label="Місто" required className="col-span-1 md:col-span-2">
                     <Select
                         showSearch
                         filterOption={false}
@@ -180,20 +209,22 @@ const CreateOrderPage : React.FC = () => {
                 </Form.Item>
 
                 {isError && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+                    <div className="col-span-1 md:col-span-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-2">
                         Помилка створення. Перевірте усі поля
                     </div>
                 )}
 
-                <Form.Item>
+                <Form.Item className="col-span-1 md:col-span-2 mt-2">
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                        className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
                     >
                         Оформити замовлення
                     </button>
                 </Form.Item>
             </Form>
+
+            {isLoading && <LoadingOverlay />}
         </>
     );
 }
