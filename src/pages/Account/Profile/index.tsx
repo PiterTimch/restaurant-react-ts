@@ -1,15 +1,52 @@
 import {useAppSelector} from "../../../store";
 import {APP_ENV} from "../../../env";
-import {Button} from "antd";
+import {Button, Form, Input, Modal} from "antd";
 import {
     CheckLineIcon,
-    MailIcon,
+    MailIcon, PencilIcon,
     TimeIcon,
     UserIcon
 } from "../../../icons";
+import {useChangePasswordMutation} from "../../../services/apiAccount.ts";
+import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
+import {useState} from "react";
+import {Link} from "react-router";
+
+interface INewPasswords {
+    newPassword: string;
+    confirmPassword: string
+}
 
 const ProfilePage : React.FC = () => {
     const {user} = useAppSelector(state => state.auth);
+
+    const [changePassword, {isLoading}] = useChangePasswordMutation()
+
+    const [form] = Form.useForm<INewPasswords>();
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleChangePassword = async (values: INewPasswords) => {
+        if (values.newPassword !== values.confirmPassword) {
+            form.setFields([
+                {
+                    name: "newPassword",
+                    errors: ["Паролі не збігаються"]
+                }
+            ]);
+            return;
+        }
+
+        try {
+            await changePassword({ newPassword: values.newPassword }).unwrap();
+            console.log("Пароль успішно змінено");
+            setIsOpen(false);
+        } catch (err) {
+            console.log("Помилка при зміні паролю", err);
+        }
+    };
+
+    if (isLoading) return <LoadingOverlay />;
 
     return (
         <div className="flex min-h-[500px] items-center justify-center">
@@ -19,8 +56,8 @@ const ProfilePage : React.FC = () => {
 
                         <div className="flex justify-center">
                             <img
-                                src={user.image ? `${APP_ENV.IMAGES_400_URL}${user.image}` : '/images/user/default.png'}
-                                alt={user.name}
+                                src={user!.image ? `${APP_ENV.IMAGES_400_URL}${user.image}` : '/images/user/default.png'}
+                                alt={user!.name}
                                 className="lg:w-[180px] w-[300px] object-cover rounded-full m-5"
                             />
                         </div>
@@ -46,7 +83,9 @@ const ProfilePage : React.FC = () => {
                                 <Button
                                     type="primary"
                                     className=" !bg-yellow-400 !text-black hover:!bg-yellow-600 hover:!text-white w-[140px]"
+                                    onClick={() => setIsOpen(!isOpen)}
                                 >Змінити пароль</Button>
+
                             </div>
 
                             <div className="flex justify-center lg:justify-start mb-3">
@@ -58,12 +97,19 @@ const ProfilePage : React.FC = () => {
                         </div>
 
                         <div className="col-span-2 grid grid-cols-1 ">
-                            <div className="lg:place-items-start mb-3 place-items-center">
-                                <div className="flex gap-1">
-                                    <MailIcon/>
-                                    <p className="text-xs">Пошта</p>
+                            <div className="flex justify-center lg:justify-between">
+                                <div className="lg:place-items-start mb-3 place-items-center">
+                                    <div className="flex gap-1">
+                                        <MailIcon/>
+                                        <p className="text-xs">Пошта</p>
+                                    </div>
+                                    <p className="text-xl">{user!.email}</p>
                                 </div>
-                                <p className="text-xl">{user!.email}</p>
+
+                                <Button
+                                    icon={<PencilIcon />}
+                                    className="!hidden lg:!block justify-end"
+                                />
                             </div>
 
                             <div className="lg:place-items-start mb-3 place-items-center">
@@ -78,7 +124,11 @@ const ProfilePage : React.FC = () => {
                                 <Button
                                     type="primary"
                                     className="!bg-green-300 !text-black hover:!bg-green-600 hover:!text-white w-[140px]"
-                                >Список замовлень</Button>
+                                >
+                                    <Link to='/order/list/'>
+                                        Список замовлень
+                                    </Link>
+                                </Button>
                             </div>
 
                         </div>
@@ -86,6 +136,44 @@ const ProfilePage : React.FC = () => {
                     </div>
                 </div>
             </div>
+
+            <Modal
+                open={isOpen}
+                onCancel={() => setIsOpen(!isOpen)}
+                footer={null}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={handleChangePassword}
+                    className={`space-y-4 ${isOpen ? 'block' : 'hidden'}`}
+                >
+                    <Form.Item<INewPasswords>
+                        name="newPassword"
+                        label={<span className="text-gray-700 dark:text-white font-medium">Новий пароль</span>}
+                        rules={[{ required: true, message: 'Вкажіть новий пароль' }]}
+                    >
+                        <Input.Password className="rounded-lg py-2 px-4 dark:bg-gray-800 dark:text-white" />
+                    </Form.Item>
+
+                    <Form.Item<INewPasswords>
+                        name="confirmPassword"
+                        label={<span className="text-gray-700 dark:text-white font-medium">Повторіть пароль</span>}
+                        rules={[{ required: true, message: 'Повторіть пароль' }]}
+                    >
+                        <Input.Password className="rounded-lg py-2 px-4 dark:bg-gray-800 dark:text-white" />
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button
+                            htmlType="submit"
+                            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition"
+                        >
+                            Підтвердити
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
     );
 }

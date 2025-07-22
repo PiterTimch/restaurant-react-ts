@@ -90,6 +90,13 @@ export const apiAccount = createApi({
                 body: data
             })
         }),
+        changePassword: builder.mutation<void, IResetPasswordRequest>({
+            query: (data) => ({
+                url: 'change-password',
+                method: 'POST',
+                body: data
+            })
+        }),
         register: builder.mutation<{token: string}, IRegister>({
             query: (credentials) => {
                 const formData = serialize(credentials);
@@ -109,5 +116,6 @@ export const {
     useResetPasswordMutation,
     useValidateResetTokenQuery,
     useRegisterMutation,
+    useChangePasswordMutation,
     useLoginByGoogleMutation
 } = apiAccount;
