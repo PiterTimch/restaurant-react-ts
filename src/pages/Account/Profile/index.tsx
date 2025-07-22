@@ -1,4 +1,4 @@
-import {useAppSelector} from "../../../store";
+import {useAppDispatch, useAppSelector} from "../../../store";
 import {APP_ENV} from "../../../env";
 import {Button, Form, Input, Modal} from "antd";
 import {
@@ -7,11 +7,11 @@ import {
     TimeIcon,
     UserIcon
 } from "../../../icons";
-import {useChangePasswordMutation} from "../../../services/apiAccount.ts";
+import {useChangePasswordMutation, useDeleteAccountMutation} from "../../../services/apiAccount.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useState} from "react";
-import {Link} from "react-router";
-
+import {Link, useNavigate} from "react-router";
+import {logout} from "../../../store/authSlice.ts";
 interface INewPasswords {
     newPassword: string;
     confirmPassword: string
@@ -20,11 +20,23 @@ interface INewPasswords {
 const ProfilePage : React.FC = () => {
     const {user} = useAppSelector(state => state.auth);
 
+    const navigate = useNavigate();
+
     const [changePassword, {isLoading}] = useChangePasswordMutation()
+    const [deleteAccount] = useDeleteAccountMutation()
 
     const [form] = Form.useForm<INewPasswords>();
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpenPasswordForm, setisOpenPasswordForm] = useState(false);
+    const [isOpenDeleteModal, setisOpenDeleteModal] = useState(false);
+
+    const dispatch = useAppDispatch();
+
+    const handleDelete = () => {
+        deleteAccount()
+        dispatch(logout());
+        navigate('/login');
+    }
 
     const handleChangePassword = async (values: INewPasswords) => {
         if (values.newPassword !== values.confirmPassword) {
@@ -40,7 +52,7 @@ const ProfilePage : React.FC = () => {
         try {
             await changePassword({ newPassword: values.newPassword }).unwrap();
             console.log("Пароль успішно змінено");
-            setIsOpen(false);
+            setisOpenPasswordForm(false);
         } catch (err) {
             console.log("Помилка при зміні паролю", err);
         }
@@ -83,7 +95,7 @@ const ProfilePage : React.FC = () => {
                                 <Button
                                     type="primary"
                                     className=" !bg-yellow-400 !text-black hover:!bg-yellow-600 hover:!text-white w-[140px]"
-                                    onClick={() => setIsOpen(!isOpen)}
+                                    onClick={() => setisOpenPasswordForm(!isOpenPasswordForm)}
                                 >Змінити пароль</Button>
 
                             </div>
@@ -92,6 +104,7 @@ const ProfilePage : React.FC = () => {
                                 <Button
                                     type="primary"
                                     className="!bg-red-400 !text-black hover:!bg-red-600 hover:!text-white w-[140px]"
+                                    onClick={() => {setisOpenDeleteModal(true)}}
                                 >Видалити акаунт</Button>
                             </div>
                         </div>
@@ -138,15 +151,15 @@ const ProfilePage : React.FC = () => {
             </div>
 
             <Modal
-                open={isOpen}
-                onCancel={() => setIsOpen(!isOpen)}
+                open={isOpenPasswordForm}
+                onCancel={() => setisOpenPasswordForm(!isOpenPasswordForm)}
                 footer={null}
             >
                 <Form
                     form={form}
                     layout="vertical"
                     onFinish={handleChangePassword}
-                    className={`space-y-4 ${isOpen ? 'block' : 'hidden'}`}
+                    className={`space-y-4 ${isOpenPasswordForm ? 'block' : 'hidden'}`}
                 >
                     <Form.Item<INewPasswords>
                         name="newPassword"
@@ -173,6 +186,14 @@ const ProfilePage : React.FC = () => {
                         </Button>
                     </Form.Item>
                 </Form>
+            </Modal>
+
+            <Modal
+                open={isOpenDeleteModal}
+                onCancel={() => setisOpenDeleteModal(!isOpenDeleteModal)}
+                onOk={handleDelete}
+            >
+                <p>Ви справді хочте видалити акаунт?</p>
             </Modal>
         </div>
     );

@@ -106,7 +106,14 @@ export const apiAccount = createApi({
                     method: 'POST',
                     body: formData};
             }
-        })
+        }),
+        deleteAccount: builder.mutation<void, void>({
+            query: () => {
+                return{
+                    url: 'delete',
+                    method: 'PUT',};
+            }
+        }),
     })
 });
 
@@ -117,5 +124,6 @@ export const {
     useValidateResetTokenQuery,
     useRegisterMutation,
     useChangePasswordMutation,
-    useLoginByGoogleMutation
+    useLoginByGoogleMutation,
+    useDeleteAccountMutation,
 } = apiAccount;
