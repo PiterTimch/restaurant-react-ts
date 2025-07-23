@@ -1,6 +1,6 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
-import type {ILogin, IRegister} from "./types.ts";
+import type {ILogin, IRegister, IUserEdit} from "./types.ts";
 //import {jwtDecode} from "jwt-decode";
 import {serialize} from "object-to-formdata";
 import {loginSuccess} from "../store/authSlice.ts";
@@ -111,7 +111,18 @@ export const apiAccount = createApi({
             query: () => {
                 return{
                     url: 'delete',
-                    method: 'PUT',};
+                    method: 'DELETE',};
+            }
+        }),
+        editAccount: builder.mutation<void, IUserEdit>({
+            query: (credentials) => {
+                const formData = serialize(credentials);
+
+                return{
+                    url: 'edit',
+                    method: 'PUT',
+                    body: formData
+                };
             }
         }),
     })
@@ -126,4 +137,5 @@ export const {
     useChangePasswordMutation,
     useLoginByGoogleMutation,
     useDeleteAccountMutation,
+    useEditAccountMutation,
 } = apiAccount;

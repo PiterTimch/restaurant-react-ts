@@ -119,10 +119,13 @@ const ProfilePage : React.FC = () => {
                                     <p className="text-xl">{user!.email}</p>
                                 </div>
 
-                                <Button
-                                    icon={<PencilIcon />}
-                                    className="!hidden lg:!block justify-end"
-                                />
+
+                                <Link to="/edit-profile" >
+                                    <Button
+                                        icon={<PencilIcon />}
+                                        className="!hidden lg:!block justify-end"
+                                    />
+                                </Link>
                             </div>
 
                             <div className="lg:place-items-start mb-3 place-items-center">

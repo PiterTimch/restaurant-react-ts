@@ -146,8 +146,8 @@ export interface IUserEdit {
     firstName: string;
     lastName: string;
     email: string;
-    image: string;
-    roles: string[];
+    image?: string;
+    roles?: string[];
 }
 
 export interface IUserDelete {

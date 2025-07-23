@@ -25,6 +25,7 @@ const UserEditPage = React.lazy(() => import("./admin/pages/Users/Edit"));
 const UserOrderList = React.lazy(() => import("./pages/Order/List"));
 const CreateOrderPage = React.lazy(() => import("./pages/Order/Create"));
 const ProfilePage = React.lazy(() => import("./pages/Account/Profile"));
+const EditProfilePage = React.lazy(() => import("./pages/Account/EditProfile"));
 
 const App: React.FC = () => {
     return (
@@ -39,6 +40,7 @@ const App: React.FC = () => {
                         <Route path="reset-password" element={<ResetPasswordPage />} />
                         <Route path="registration" element={<RegistrationPage />} />
                         <Route path="profile" element={<ProfilePage />} />
+                        <Route path="edit-profile" element={<EditProfilePage />} />
 
                         <Route path="products">
                             <Route path="list" element={<ProductsListPage />} />
