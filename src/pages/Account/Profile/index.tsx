@@ -1,6 +1,6 @@
 import {useAppDispatch, useAppSelector} from "../../../store";
 import {APP_ENV} from "../../../env";
-import {Button, Form, Input, Modal} from "antd";
+import {Button, Form, Input, Modal, Space} from "antd";
 import {
     CheckLineIcon,
     MailIcon, PencilIcon,
@@ -12,7 +12,10 @@ import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useState} from "react";
 import {Link, useNavigate} from "react-router";
 import {logout} from "../../../store/authSlice.ts";
+import type {ServerError} from "../../../services/types.ts";
+import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 interface INewPasswords {
+    oldPassword: string;
     newPassword: string;
     confirmPassword: string
 }
@@ -22,18 +25,19 @@ const ProfilePage : React.FC = () => {
 
     const navigate = useNavigate();
 
-    const [changePassword, {isLoading}] = useChangePasswordMutation()
+    const [changePassword, {isLoading, isError}] = useChangePasswordMutation()
     const [deleteAccount] = useDeleteAccountMutation()
 
     const [form] = Form.useForm<INewPasswords>();
+    const setServerErrors = useFormServerErrors(form);
 
-    const [isOpenPasswordForm, setisOpenPasswordForm] = useState(false);
-    const [isOpenDeleteModal, setisOpenDeleteModal] = useState(false);
+    const [isOpenPasswordForm, setIsOpenPasswordForm] = useState(false);
+    const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
     const dispatch = useAppDispatch();
 
-    const handleDelete = () => {
-        deleteAccount()
+    const handleDelete = async () => {
+        await deleteAccount()
         dispatch(logout());
         navigate('/login');
     }
@@ -50,10 +54,16 @@ const ProfilePage : React.FC = () => {
         }
 
         try {
-            await changePassword({ newPassword: values.newPassword }).unwrap();
+            await changePassword({ newPassword: values.newPassword, oldPassword: values.oldPassword }).unwrap();
             console.log("Пароль успішно змінено");
-            setisOpenPasswordForm(false);
+            setIsOpenPasswordForm(false);
         } catch (err) {
+            const serverError = err as ServerError;
+
+            if (serverError?.status === 400 && serverError?.data?.errors) {
+                setServerErrors(serverError.data.errors);
+            }
+
             console.log("Помилка при зміні паролю", err);
         }
     };
@@ -95,7 +105,7 @@ const ProfilePage : React.FC = () => {
                                 <Button
                                     type="primary"
                                     className=" !bg-yellow-400 !text-black hover:!bg-yellow-600 hover:!text-white w-[140px]"
-                                    onClick={() => setisOpenPasswordForm(!isOpenPasswordForm)}
+                                    onClick={() => setIsOpenPasswordForm(!isOpenPasswordForm)}
                                 >Змінити пароль</Button>
 
                             </div>
@@ -104,7 +114,7 @@ const ProfilePage : React.FC = () => {
                                 <Button
                                     type="primary"
                                     className="!bg-red-400 !text-black hover:!bg-red-600 hover:!text-white w-[140px]"
-                                    onClick={() => {setisOpenDeleteModal(true)}}
+                                    onClick={() => {setIsOpenDeleteModal(true)}}
                                 >Видалити акаунт</Button>
                             </div>
                         </div>
@@ -155,15 +165,23 @@ const ProfilePage : React.FC = () => {
 
             <Modal
                 open={isOpenPasswordForm}
-                onCancel={() => setisOpenPasswordForm(!isOpenPasswordForm)}
+                onCancel={() => setIsOpenPasswordForm(!isOpenPasswordForm)}
                 footer={null}
+                destroyOnClose={true}
             >
                 <Form
                     form={form}
                     layout="vertical"
                     onFinish={handleChangePassword}
-                    className={`space-y-4 ${isOpenPasswordForm ? 'block' : 'hidden'}`}
                 >
+                    <Form.Item<INewPasswords>
+                        name="oldPassword"
+                        label={<span className="text-gray-700 dark:text-white font-medium">Старий пароль</span>}
+                        rules={[{ required: true, message: 'Вкажіть старий пароль' }]}
+                    >
+                        <Input.Password className="rounded-lg py-2 px-4 dark:bg-gray-800 dark:text-white" />
+                    </Form.Item>
+
                     <Form.Item<INewPasswords>
                         name="newPassword"
                         label={<span className="text-gray-700 dark:text-white font-medium">Новий пароль</span>}
@@ -180,6 +198,8 @@ const ProfilePage : React.FC = () => {
                         <Input.Password className="rounded-lg py-2 px-4 dark:bg-gray-800 dark:text-white" />
                     </Form.Item>
 
+                    {isError && <Space className={"text-red-600"}>Сталася помилка, перевірте поля</Space>}
+
                     <Form.Item>
                         <Button
                             htmlType="submit"
@@ -193,7 +213,7 @@ const ProfilePage : React.FC = () => {
 
             <Modal
                 open={isOpenDeleteModal}
-                onCancel={() => setisOpenDeleteModal(!isOpenDeleteModal)}
+                onCancel={() => setIsOpenDeleteModal(!isOpenDeleteModal)}
                 onOk={handleDelete}
             >
                 <p>Ви справді хочте видалити акаунт?</p>

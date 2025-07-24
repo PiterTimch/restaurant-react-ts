@@ -24,6 +24,11 @@ export  interface IResetPasswordRequest {
     email: string;
 }
 
+export interface IChangePasswordRequest {
+    oldPassword: string;
+    newPassword: string;
+}
+
 const handleAuthSuccess = async (
     queryFulfilled: Promise<{ data: {token: string} }>,
     dispatch: Dispatch,
@@ -90,7 +95,7 @@ export const apiAccount = createApi({
                 body: data
             })
         }),
-        changePassword: builder.mutation<void, IResetPasswordRequest>({
+        changePassword: builder.mutation<void, IChangePasswordRequest>({
             query: (data) => ({
                 url: 'change-password',
                 method: 'POST',

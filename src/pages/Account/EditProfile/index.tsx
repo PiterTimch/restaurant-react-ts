@@ -3,7 +3,6 @@ import {APP_ENV} from "../../../env";
 import {Button, Form, type FormProps, Input} from "antd";
 import {
     MailIcon,
-    TimeIcon,
     UserIcon
 } from "../../../icons";
 import {useEditAccountMutation} from "../../../services/apiAccount.ts";
