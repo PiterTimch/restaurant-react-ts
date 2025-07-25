@@ -119,14 +119,14 @@ export const apiAccount = createApi({
                     method: 'DELETE',};
             }
         }),
-        editAccount: builder.mutation<void, IUserEdit>({
+        editAccount: builder.mutation<{token : string}, IUserEdit>({
             query: (credentials) => {
                 const formData = serialize(credentials);
 
                 return{
                     url: 'edit',
                     method: 'PUT',
-                    body: formData
+                    body: formData,
                 };
             }
         }),

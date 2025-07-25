@@ -16,6 +16,13 @@ export const apiOrder = createApi({
             query: () => 'list',
             providesTags: ['Orders'],
         }),
+        getLastOrderAddress: builder.query<string, void>({
+            query: () => ({
+                url: `last-order-address`,
+                responseHandler: (response) => response.text(),
+            }),
+            providesTags: ['Orders'],
+        }),
         getAllCities: builder.query<ICity[], IGetCitiesRequest>({
             query: (params) => ({
                 url: 'cities',
@@ -49,6 +56,7 @@ export const apiOrder = createApi({
 export const {
     useGetAllOrdersQuery,
     useGetByIdQuery,
+    useGetLastOrderAddressQuery,
     useCreateOrderMutation,
     useGetAllCitiesQuery,
     useGetAllPaymentTypesQuery,

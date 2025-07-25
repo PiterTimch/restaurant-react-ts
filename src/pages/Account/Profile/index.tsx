@@ -14,6 +14,7 @@ import {Link, useNavigate} from "react-router";
 import {logout} from "../../../store/authSlice.ts";
 import type {ServerError} from "../../../services/types.ts";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
+import {useGetLastOrderAddressQuery} from "../../../services/apiOrder.ts";
 interface INewPasswords {
     oldPassword: string;
     newPassword: string;
@@ -25,8 +26,9 @@ const ProfilePage : React.FC = () => {
 
     const navigate = useNavigate();
 
-    const [changePassword, {isLoading, isError}] = useChangePasswordMutation()
-    const [deleteAccount] = useDeleteAccountMutation()
+    const [changePassword, {isLoading, isError}] = useChangePasswordMutation();
+    const [deleteAccount] = useDeleteAccountMutation();
+    const {data: lastAddress, isLoading: isAddressLoading} = useGetLastOrderAddressQuery();
 
     const [form] = Form.useForm<INewPasswords>();
     const setServerErrors = useFormServerErrors(form);
@@ -68,7 +70,7 @@ const ProfilePage : React.FC = () => {
         }
     };
 
-    if (isLoading) return <LoadingOverlay />;
+    if (isAddressLoading && isLoading) return <LoadingOverlay />;
 
     return (
         <div className="flex min-h-[500px] items-center justify-center">
@@ -143,7 +145,7 @@ const ProfilePage : React.FC = () => {
                                     <TimeIcon/>
                                     <p className="text-xs">Остання адреса</p>
                                 </div>
-                                <p className="text-xl">{user!.role}</p>
+                                <p className="text-sm">{lastAddress}</p>
                             </div>
 
                             <div className="flex justify-center lg:justify-start mb-5">
@@ -167,7 +169,6 @@ const ProfilePage : React.FC = () => {
                 open={isOpenPasswordForm}
                 onCancel={() => setIsOpenPasswordForm(!isOpenPasswordForm)}
                 footer={null}
-                destroyOnClose={true}
             >
                 <Form
                     form={form}
