@@ -1,4 +1,4 @@
-import {useAppSelector} from "../../../store";
+import {useAppDispatch, useAppSelector} from "../../../store";
 import {APP_ENV} from "../../../env";
 import {Button, Form, type FormProps, Input} from "antd";
 import {
@@ -10,21 +10,28 @@ import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useNavigate} from "react-router";
 import type {IUserEdit} from "../../../services/types.ts";
 import ImageUploadFormItem from "../../../components/ui/form/ImageUploadFormItem.tsx";
+import {loginSuccess} from "../../../store/authSlice.ts";
 
 const EditProfilePage : React.FC = () => {
     const {user} = useAppSelector(state => state.auth);
-
-    const navigate = useNavigate();
-
     const [edit, {isLoading}] = useEditAccountMutation()
 
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+
     const [form] = Form.useForm<IUserEdit>();
+    const initialFormObject = {
+        firstName: user.name.split(" ")[0],
+        lastName: user.name.split(" ")[1],
+        email: user.email,
+        image: user.image,
+    }
 
     const onFinish: FormProps<IUserEdit>['onFinish'] = async (values) => {
         try {
             const res = await edit(values);
             console.log(res);
-            localStorage.setItem('token', res.data.token)
+            dispatch(loginSuccess(res.data.token));
             navigate('/profile');
         }
         catch (error) {
@@ -41,7 +48,7 @@ const EditProfilePage : React.FC = () => {
 
                     <Form
                         form={form}
-                        initialValues={user}
+                        initialValues={initialFormObject}
                         onFinish={onFinish}
                         layout="vertical"
                         className="grid grid-cols-1 lg:grid-cols-2 gap-6"
@@ -94,7 +101,7 @@ const EditProfilePage : React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="flex justify-center col-span-1 lg:col-span-2 mt-4">
+                        <div className="flex justify-center col-span-1 lg:col-span-2 mb-4">
                             <Button type="primary" htmlType="submit" className="w-48">
                                 Підтвердити
                             </Button>

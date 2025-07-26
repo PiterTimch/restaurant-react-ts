@@ -1,6 +1,7 @@
 import './App.css';
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router";
+import LoadingOverlay from "./components/ui/loading/LoadingOverlay.tsx";
 
 const DashboardHome = React.lazy(() => import("./admin/pages/Dashboard/DashboardHome.tsx"));
 const AdminLayout = React.lazy(() => import("./layout/admin/AdminLayout.tsx"));
@@ -13,6 +14,7 @@ const CategoriesEditPage = React.lazy(() => import("./admin/pages/Categories/Edi
 const LoginPage = React.lazy(() => import("./pages/Account/Login"));
 const RegistrationPage = React.lazy(() => import("./pages/Account/Register"));
 const RequireAdmin = React.lazy(() => import("./components/ProtectedRoute/RequireAdmin.tsx"));
+const RequireLogin = React.lazy(() => import("./components/ProtectedRoute/RequireLogin.tsx"));
 const ProductsListPage = React.lazy(() => import("./pages/Products"));
 const ProductItemPage = React.lazy(() => import("./pages/Products/Item"));
 const ProductTablePage = React.lazy(() => import("./admin/pages/Products/Table"));
@@ -30,7 +32,7 @@ const EditProfilePage = React.lazy(() => import("./pages/Account/EditProfile"));
 const App: React.FC = () => {
     return (
         <Router>
-            <React.Suspense fallback={<div>Завантаження...</div>}>
+            <React.Suspense fallback={<LoadingOverlay />}>
                 <Routes>
                     <Route path="/" element={<UserLayout />}>
                         <Route index element={<UserHomePage />} />
@@ -39,17 +41,20 @@ const App: React.FC = () => {
                         <Route path="forgot-success" element={<ForgotSuccessPage />} />
                         <Route path="reset-password" element={<ResetPasswordPage />} />
                         <Route path="registration" element={<RegistrationPage />} />
-                        <Route path="profile" element={<ProfilePage />} />
-                        <Route path="edit-profile" element={<EditProfilePage />} />
+
+                        <Route element={<RequireLogin/>}>
+                            <Route path="profile" element={<ProfilePage />} />
+                            <Route path="edit-profile" element={<EditProfilePage />} />
+
+                            <Route path="order">
+                                <Route path="list" element={<UserOrderList />} />
+                                <Route path="create" element={<CreateOrderPage />} />
+                            </Route>
+                        </Route>
 
                         <Route path="products">
                             <Route path="list" element={<ProductsListPage />} />
                             <Route path="list/:slug" element={<ProductItemPage />} />
-                        </Route>
-
-                        <Route path="order">
-                            <Route path="list" element={<UserOrderList />} />
-                            <Route path="create" element={<CreateOrderPage />} />
                         </Route>
                     </Route>
 
