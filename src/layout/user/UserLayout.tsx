@@ -38,7 +38,7 @@ const UserLayout: React.FC = () => {
         <div className="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
             <header className="w-full py-4 px-6 bg-orange-500 text-white shadow-md flex justify-between">
                 <div className="flex items-center gap-4">
-                    <h1 className="text-xl font-semibold">FoodDelivery</h1>
+                    <Link to="/" className="text-xl font-semibold">FoodDelivery</Link>
                     <Link to="/products/list/">Продукти</Link>
                 </div>
 

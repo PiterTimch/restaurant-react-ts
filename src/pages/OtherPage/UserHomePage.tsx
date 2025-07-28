@@ -16,7 +16,7 @@ const UserHomePage: React.FC = () => {
                     Обирай улюблені страви з нашого меню та отримуй їх швидко і гарячими.
                 </p>
                 <Link
-                    to="/menu"
+                    to="/products/list"
                     className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-lg transition"
                 >
                     Переглянути меню
@@ -41,7 +41,7 @@ const UserHomePage: React.FC = () => {
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
                         {categories.map((cat) => (
                             <Link
-                                to={`/menu/${cat.slug}`}
+                                to={`/products/list?categoryId=${cat.id}`}
                                 key={cat.id}
                                 className="group relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition"
                             >
@@ -66,12 +66,6 @@ const UserHomePage: React.FC = () => {
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
                     Використай промокод <span className="font-semibold">WELCOME10</span> при оформленні замовлення.
                 </p>
-                <Link
-                    to="/menu"
-                    className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-5 rounded-lg"
-                >
-                    Замовити зараз
-                </Link>
             </section>
         </div>
     );
