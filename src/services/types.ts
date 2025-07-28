@@ -213,3 +213,14 @@ export interface IGetDepartmentsRequest {
     itemPerPage:  number;
     cityName: string;
 }
+
+export interface IProductSearchParams {
+    page?: number;
+    itemPerPage?: number;
+    name?: string;
+    categoryId?: number;
+    productSizeId?: number;
+    minPrice?: number;
+    maxPrice?: number;
+    prohibitedIngredientIds?: number[];
+}

@@ -30,14 +30,11 @@ const ProductItemPage: React.FC = () => {
         console.log("product add", product);
 
         const newItem: ICartItem = {
-            id: product.id,
-            productId: product.id,
+            productId: selectedVariant?.id ?? product.id,
             quantity: 1,
-            sizeName: product.productSize?.name ?? "",
-            price: product.price,
-            imageName: product.productImages?.[0]?.name ?? "",
-            categoryId: 0,
-            categoryName: "",
+            sizeName: selectedVariant?.productSize?.name ?? product.productSize?.name,
+            price: selectedVariant?.price ?? product.price,
+            imageName: selectedVariant?.productImages?.[0]?.name ?? product.productImages?.[0]?.name ,
             name: product.name,
         };
 

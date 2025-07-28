@@ -1,5 +1,12 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
-import type {IIngredient, IProductCreate, IProductItem, IProductSize} from "./types.ts";
+import type {
+    IIngredient,
+    IProductCreate,
+    IProductItem,
+    IProductSearchParams,
+    IProductSize,
+    ISearchResult
+} from "./types.ts";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
 import {serialize} from "object-to-formdata";
 
@@ -41,7 +48,20 @@ export const apiProduct = createApi({
                 }
             },
             invalidatesTags: ['Products'],
-        })
+        }),
+        searchProduct: builder.query<ISearchResult<IProductItem>, IProductSearchParams>({
+            query: (params) => {
+                try {
+                    return {
+                        url: 'search',
+                        method: 'GET',
+                        params,
+                    };
+                } catch {
+                    throw new Error('Error product search');
+                }
+            }
+        }),
     }),
 });
 
@@ -52,5 +72,6 @@ export const {
     useGetAllIngredientsQuery,
     useGetAllSizesQuery,
     useGetProductBySlugQuery,
-    useCreateProductMutation
+    useCreateProductMutation,
+    useSearchProductQuery,
 } = apiProduct;
