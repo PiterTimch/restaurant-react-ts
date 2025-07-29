@@ -1,6 +1,6 @@
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay.tsx";
 import CardWithVariants from "../../components/ProductList/CardWithVariants.tsx";
-import {useSearchProductQuery} from "../../services/apiProduct.ts";
+import {useGetAllSizesQuery, useSearchProductQuery} from "../../services/apiProduct.ts";
 import type {IProductItem, IProductSearchParams} from "../../services/types.ts";
 import SimpleCard from "../../components/ProductList/SimpleCard.tsx";
 import {useState} from "react";
@@ -35,6 +35,7 @@ const ProductsListPage = () => {
 
     const { data: products, isLoading } = useSearchProductQuery(searchParams);
     const { data: categories } = useGetAllCategoriesQuery();
+    const { data: sizes } = useGetAllSizesQuery();
 
     const handleChange = <K extends keyof IProductSearchParams>(key: K, value: IProductSearchParams[K]) => {
         setSearchParams((prev) => ({
@@ -48,17 +49,30 @@ const ProductsListPage = () => {
         <div className="max-w-7xl mx-auto px-4 py-8">
             {isLoading && <LoadingOverlay />}
 
-            <Collapse>
+            <Collapse className="flex justify-center mb-8 !bg-white border-0 !border-white">
                 <Panel key="1" header="Фільтри">
-                    <Select
-                        placeholder="Категорія"
-                        allowClear
-                        onChange={value => handleChange("categoryId", value)}
-                    >
-                        {categories?.map(cat => (
-                            <Option key={cat.id.toString()} value={cat.id} >{cat.name}</Option>
-                        ))}
-                    </Select>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Select
+                            placeholder="Категорія"
+                            allowClear
+                            onChange={value => handleChange("categoryId", value)}
+                        >
+                            {categories?.map(cat => (
+                                <Option key={cat.id.toString()} value={cat.id} >{cat.name}</Option>
+                            ))}
+                        </Select>
+
+                        <Select
+                            placeholder="Розмір"
+                            allowClear
+                            mode="multiple"
+                            onChange={value => handleChange("productSizeId", value)}
+                        >
+                            {sizes?.map(size => (
+                                <Option key={size.id.toString()} value={size.id} >{size.name}</Option>
+                            ))}
+                        </Select>
+                    </div>
                 </Panel>
             </Collapse>
 
