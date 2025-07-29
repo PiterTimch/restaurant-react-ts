@@ -4,6 +4,11 @@ import {useSearchProductQuery} from "../../services/apiProduct.ts";
 import type {IProductItem, IProductSearchParams} from "../../services/types.ts";
 import SimpleCard from "../../components/ProductList/SimpleCard.tsx";
 import {useState} from "react";
+import {Collapse, Select} from "antd";
+import {useGetAllCategoriesQuery} from "../../services/apiCategory.ts";
+
+const { Panel } = Collapse;
+const { Option } = Select;
 
 const ProductsListPage = () => {
 
@@ -26,13 +31,36 @@ const ProductsListPage = () => {
         return searchParams
     };
 
-    const [searchParams] = useState<IProductSearchParams>(parseQueryParams());
+    const [searchParams, setSearchParams] = useState<IProductSearchParams>(parseQueryParams());
 
     const { data: products, isLoading } = useSearchProductQuery(searchParams);
+    const { data: categories } = useGetAllCategoriesQuery();
+
+    const handleChange = <K extends keyof IProductSearchParams>(key: K, value: IProductSearchParams[K]) => {
+        setSearchParams((prev) => ({
+            ...prev,
+            [key]: value,
+            page: 1,
+        }));
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
             {isLoading && <LoadingOverlay />}
+
+            <Collapse>
+                <Panel key="1" header="Фільтри">
+                    <Select
+                        placeholder="Категорія"
+                        allowClear
+                        onChange={value => handleChange("categoryId", value)}
+                    >
+                        {categories?.map(cat => (
+                            <Option key={cat.id.toString()} value={cat.id} >{cat.name}</Option>
+                        ))}
+                    </Select>
+                </Panel>
+            </Collapse>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products?.items.map((product: IProductItem) => (

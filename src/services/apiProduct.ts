@@ -60,7 +60,8 @@ export const apiProduct = createApi({
                 } catch {
                     throw new Error('Error product search');
                 }
-            }
+            },
+            providesTags: ['Products']
         }),
     }),
 });
