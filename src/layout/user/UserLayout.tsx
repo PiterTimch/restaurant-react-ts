@@ -53,7 +53,6 @@ const UserLayout: React.FC = () => {
                         <Form.Item
                             name="name"
                             className="w-full !mb-0"
-                            rules={[{ required: true, message: 'Введіть назву філії для пошуку' }]}
                         >
                             <div className="relative w-full">
                                 <input
