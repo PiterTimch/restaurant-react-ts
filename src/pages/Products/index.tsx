@@ -6,6 +6,7 @@ import SimpleCard from "../../components/ProductList/SimpleCard.tsx";
 import {Col, Collapse, Row, Select, Slider, Typography} from "antd";
 import {useGetAllCategoriesQuery} from "../../services/apiCategory.ts";
 import {useNavigate, useSearchParams} from "react-router";
+import Pagination from "../../components/common/Pagination.tsx";
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -43,7 +44,7 @@ const ProductsListPage = () => {
 
         if (Array.isArray(value)) {
             params.delete(key as string);
-            value.forEach((val) => {
+            value.forEach(val => {
                 if (val !== undefined && val !== null) {
                     params.append(key as string, val.toString());
                 }
@@ -56,9 +57,18 @@ const ProductsListPage = () => {
             }
         }
 
-        params.set("page", "1");
+        if (key !== "page") {
+            params.set("page", "1");
+        }
 
-        navigate(`/products/list?${params.toString()}`);
+        console.log(params.toString());
+
+        navigate(`/products/list?${ params.toString()}`);
+    };
+
+    const handlePageChange = (newPage: number) => {
+        console.log(newPage);
+        handleChange("page", newPage);
     };
 
     return (
@@ -68,28 +78,36 @@ const ProductsListPage = () => {
             <Collapse className="flex justify-center mb-8 !bg-white border-0 !border-white">
                 <Panel key="1" header="Фільтри">
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                        <Select
-                            placeholder="Категорія"
-                            allowClear
-                            onChange={value => handleChange("categoryId", value)}
-                        >
-                            {categories?.map(cat => (
-                                <Option key={cat.id.toString()} value={cat.id} >{cat.name}</Option>
-                            ))}
-                        </Select>
+                        <div>
+                            <Text className="flex justify-center mb-2">Категорія</Text>
+                            <Select
+                                placeholder="Категорія"
+                                value={searchParams.categoryId}
+                                allowClear
+                                className="!flex !justify-center"
+                                onChange={value => handleChange("categoryId", value)}
+                            >
+                                {categories?.map(cat => (
+                                    <Option key={cat.id.toString()} value={cat.id} >{cat.name}</Option>
+                                ))}
+                            </Select>
+                        </div>
 
-                        <Select
-                            placeholder="Розмір"
-                            allowClear
-                            mode="multiple"
-                            className={"h-8 w-32"}
-                            onChange={value => handleChange("productSizeId", value)}
-                            maxTagCount={1}
-                        >
-                            {sizes?.map(size => (
-                                <Option key={size.id.toString()} value={size.id} >{size.name}</Option>
-                            ))}
-                        </Select>
+                        <div>
+                            <Text className="flex justify-center mb-2">Розмір</Text>
+                            <Select
+                                placeholder="Розмір"
+                                allowClear
+                                value={searchParams.productSizeId}
+                                className={"h-8 w-44 !flex !justify-center"}
+                                onChange={value => handleChange("productSizeId", value)}
+                                maxTagCount={1}
+                            >
+                                {sizes?.map(size => (
+                                    <Option key={size.id.toString()} value={size.id} >{size.name}</Option>
+                                ))}
+                            </Select>
+                        </div>
 
                         <div className={"col-span-2"}>
                             <Text className={"flex justify-center"}>Ціна</Text>
@@ -109,23 +127,27 @@ const ProductsListPage = () => {
                                     handleChange("maxPrice", value[1]);
                                 }}
                                 style={{ marginTop: 8 }}
-
+                                value={[searchParams.minPrice || 0, searchParams.maxPrice || 1000]}
                                 range
                             />
                         </div>
 
-                        <Select
-                            placeholder="Без таких інгредієнтів"
-                            allowClear
-                            mode="multiple"
-                            className={"h-8 w-32"}
-                            onChange={value => handleChange("prohibitedIngredientIds", value)}
-                            maxTagCount={1}
-                        >
-                            {ingredients?.map(ingredient => (
-                                <Option key={ingredient.id.toString()} value={ingredient.id} >{ingredient.name}</Option>
-                            ))}
-                        </Select>
+                        <div>
+                            <Text className="flex justify-center mb-2">Без таких інгредієнтів</Text>
+                            <Select
+                                placeholder="Без таких інгредієнтів"
+                                allowClear
+                                mode="multiple"
+                                className={"h-8 w-44 !flex !justify-center"}
+                                onChange={value => handleChange("prohibitedIngredientIds", value)}
+                                maxTagCount={1}
+                                value={searchParams.prohibitedIngredientIds}
+                            >
+                                {ingredients?.map(ingredient => (
+                                    <Option key={ingredient.id.toString()} value={ingredient.id} >{ingredient.name}</Option>
+                                ))}
+                            </Select>
+                        </div>
 
                     </div>
                 </Panel>
@@ -138,6 +160,15 @@ const ProductsListPage = () => {
                         : <SimpleCard key={product.id} product={product} />
                 ))}
             </div>
+
+            {products?.pagination && products?.pagination.totalPages > 1 && (
+                <Pagination
+                    currentPage={products?.pagination.currentPage}
+                    totalPages={products?.pagination.totalPages}
+                    siblingCount={2}
+                    onPageChange={handlePageChange}
+                />
+            )}
         </div>
     );
 }

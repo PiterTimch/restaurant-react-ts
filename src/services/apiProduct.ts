@@ -10,6 +10,20 @@ import type {
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
 import {serialize} from "object-to-formdata";
 
+const createQueryString = (params: Record<string, any>) => {
+    const searchParams = new URLSearchParams();
+
+    for (const key in params) {
+        const value = params[key];
+        if (Array.isArray(value)) {
+            value.forEach(v => searchParams.append(key, String(v)));
+        } else if (value !== undefined && value !== null) {
+            searchParams.append(key, String(value));
+        }
+    }
+    return searchParams.toString();
+};
+
 
 export const apiProduct = createApi({
     reducerPath: 'api/products',
@@ -51,15 +65,11 @@ export const apiProduct = createApi({
         }),
         searchProduct: builder.query<ISearchResult<IProductItem>, IProductSearchParams>({
             query: (params) => {
-                try {
-                    return {
-                        url: 'search',
-                        method: 'GET',
-                        params,
-                    };
-                } catch {
-                    throw new Error('Error product search');
-                }
+                const queryString = createQueryString(params);
+                return {
+                    url: `search?${queryString}`,
+                    method: 'GET',
+                };
             },
             providesTags: ['Products']
         }),
