@@ -28,7 +28,7 @@ const ProductsListPage = () => {
             .map(Number)
             .filter(n => !isNaN(n)),
         page: urlParams.get("page") ? Number(urlParams.get("page")) : 1,
-        itemPerPage: urlParams.get("itemPerPage") ? Number(urlParams.get("itemPerPage")) : 10,
+        itemPerPage: urlParams.get("itemPerPage") ? Number(urlParams.get("itemPerPage")) : 9,
     };
 
     const { data: products, isLoading } = useSearchProductQuery(searchParams);
@@ -77,7 +77,7 @@ const ProductsListPage = () => {
 
             <Collapse className="flex justify-center mb-8 !bg-white border-0 !border-white">
                 <Panel key="1" header="Фільтри">
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4">
                         <div>
                             <Text className="flex justify-center mb-2">Категорія</Text>
                             <Select
@@ -109,7 +109,7 @@ const ProductsListPage = () => {
                             </Select>
                         </div>
 
-                        <div className={"col-span-2"}>
+                        <div className={"md:col-span-2"}>
                             <Text className={"flex justify-center"}>Ціна</Text>
                             <Row justify="space-between" style={{ marginTop: 8 }}>
                                 <Col>
@@ -146,6 +146,21 @@ const ProductsListPage = () => {
                                 {ingredients?.map(ingredient => (
                                     <Option key={ingredient.id.toString()} value={ingredient.id} >{ingredient.name}</Option>
                                 ))}
+                            </Select>
+                        </div>
+
+                        <div>
+                            <Text className="flex justify-center mb-2">Елементів на сторінці</Text>
+                            <Select
+                                placeholder="Елементів на сторінці"
+                                className={"h-8 w-44 !flex !justify-center"}
+                                onChange={value => handleChange("itemPerPage", value)}
+                                maxTagCount={1}
+                                value={searchParams.itemPerPage}
+                            >
+                                <Option key={6} value={6} >{6}</Option>
+                                <Option key={9} value={9} >{9}</Option>
+                                <Option key={12} value={12} >{12}</Option>
                             </Select>
                         </div>
 

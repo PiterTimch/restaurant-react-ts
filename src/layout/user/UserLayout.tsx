@@ -68,7 +68,7 @@ const UserLayout: React.FC = () => {
                         <Form.Item className="!mb-0 ms-2">
                             <button
                                 type="submit"
-                                className="p-2.5 text-sm font-medium text-white bg-orange-700 rounded-lg border border-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300"
+                                className="p-2.5 me-2.5 text-sm font-medium text-white bg-orange-700 rounded-lg border border-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300"
                             >
                                 <svg
                                     className="w-4 h-4"
@@ -142,7 +142,7 @@ const UserLayout: React.FC = () => {
                     )}
                 </div>
 
-                <div className="lg:hidden flex gap-5">
+                <div className="lg:hidden flex gap-5 mt-2">
                     <CartDrawer />
                     <UserMenuSideBar />
                 </div>
