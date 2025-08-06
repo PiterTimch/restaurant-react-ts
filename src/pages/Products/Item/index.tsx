@@ -7,6 +7,7 @@ import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useAppSelector} from "../../../store";
 import {type ICartItem} from "../../../store/localCartSlice.ts";
 import {useCart} from "../../../hooks/useCart.ts";
+import BredCrumbBlock from "../../../components/ui/bredCrumb/BredCrumbBlock.tsx";
 
 const ProductItemPage: React.FC = () => {
     const { slug } = useParams();
@@ -63,6 +64,11 @@ const ProductItemPage: React.FC = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
+
+            <div className="mb-8">
+                <BredCrumbBlock categoryId={product.category.id} categorySlug={product.category.slug}/>
+            </div>
+
             <div className="grid md:grid-cols-2 gap-6">
                 {/* Image Section */}
                 <div>

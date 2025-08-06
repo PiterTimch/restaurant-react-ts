@@ -23,7 +23,6 @@ const UserHomePage: React.FC = () => {
                 </Link>
             </section>
 
-            {/* Categories / Features */}
             <section className="px-6 max-w-7xl mx-auto mt-10">
                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6 text-center">
                     Популярні категорії
@@ -41,7 +40,7 @@ const UserHomePage: React.FC = () => {
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
                         {categories.map((cat) => (
                             <Link
-                                to={`/products/list?categoryId=${cat.id}`}
+                                to={`/products?categoryId=${cat.id}`}
                                 key={cat.id}
                                 className="group relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition"
                             >

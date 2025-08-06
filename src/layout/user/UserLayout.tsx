@@ -36,7 +36,7 @@ const UserLayout: React.FC = () => {
 
     const onProductSearch: FormProps<{ name: string }>['onFinish'] = async (values) => {
         console.log('Search', values);
-        navigate("/products/list?name=" + encodeURIComponent(values.name));
+        navigate("/products?name=" + encodeURIComponent(values.name));
     };
 
     return (
@@ -44,7 +44,7 @@ const UserLayout: React.FC = () => {
             <header className="w-full py-4 px-6 bg-orange-500 text-white shadow-md flex justify-between">
                 <div className="hidden items-center gap-4 lg:flex">
                     <Link to="/" className="text-xl font-semibold">FoodDelivery</Link>
-                    <Link to="/products/list/">Продукти</Link>
+                    <Link to="/products/">Продукти</Link>
                 </div>
 
                 <div className="mt-1 max-w-64">

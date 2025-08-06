@@ -7,6 +7,7 @@ import {Col, Collapse, Row, Select, Slider, Typography} from "antd";
 import {useGetAllCategoriesQuery} from "../../services/apiCategory.ts";
 import {useNavigate, useSearchParams} from "react-router";
 import Pagination from "../../components/common/Pagination.tsx";
+import BredCrumbBlock from "../../components/ui/bredCrumb/BredCrumbBlock.tsx";
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -63,7 +64,7 @@ const ProductsListPage = () => {
 
         console.log(params.toString());
 
-        navigate(`/products/list?${ params.toString()}`);
+        navigate(`/products?${ params.toString()}`);
     };
 
     const handlePageChange = (newPage: number) => {
@@ -74,6 +75,10 @@ const ProductsListPage = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
             {isLoading && <LoadingOverlay />}
+
+            <div className="mb-8">
+                <BredCrumbBlock />
+            </div>
 
             <Collapse className="flex justify-center mb-8 !bg-white border-0 !border-white">
                 <Panel key="1" header="Фільтри">
