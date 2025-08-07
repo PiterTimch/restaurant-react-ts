@@ -73,10 +73,10 @@ const ProductsListPage = () => {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4">
             {isLoading && <LoadingOverlay />}
 
-            <div className="mb-8">
+            <div >
                 <BredCrumbBlock />
             </div>
 

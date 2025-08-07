@@ -52,7 +52,7 @@ const CardWithVariants = ({ product }: { product: IProductItem }) => {
             {selectedVariant.price} ₴
           </span>
                     <Link
-                        to={`/products/${product.slug}?variant=${selectedVariant.id}`}
+                        to={`/products/${product.category.slug}/${product.slug}?variant=${selectedVariant.id}`}
                         className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
                     >
                         Хочу

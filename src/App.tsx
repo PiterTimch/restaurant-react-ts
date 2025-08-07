@@ -28,6 +28,7 @@ const UserOrderList = React.lazy(() => import("./pages/Order/List"));
 const CreateOrderPage = React.lazy(() => import("./pages/Order/Create"));
 const ProfilePage = React.lazy(() => import("./pages/Account/Profile"));
 const EditProfilePage = React.lazy(() => import("./pages/Account/EditProfile"));
+const CategoryProductsPage = React.lazy(() => import("./pages/Products/Category"));
 
 const App: React.FC = () => {
     return (
@@ -54,7 +55,10 @@ const App: React.FC = () => {
 
                         <Route path="products">
                             <Route index element={<ProductsListPage />} />
-                            <Route path=":slug" element={<ProductItemPage />} />
+                            <Route path=":categorySlug" >
+                                <Route index element={<CategoryProductsPage />}/>
+                                <Route path=":slug" element={<ProductItemPage />} />
+                            </Route>
                         </Route>
                     </Route>
 

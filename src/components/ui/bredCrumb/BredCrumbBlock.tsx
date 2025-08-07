@@ -1,31 +1,12 @@
 import { Link } from "react-router-dom";
 
-interface BredCrumbBlockProps {
-    categorySlug?: string;
-    categoryId?: number;
-}
-
-const BredCrumbBlock: React.FC<BredCrumbBlockProps> = ({ categorySlug, categoryId }) => {
-    let urlElements: string[] = window.location.pathname.split('/').filter(Boolean);
-
-    if (categorySlug) {
-        const insertIndex = urlElements.length - 1;
-        urlElements = [
-            ...urlElements.slice(0, insertIndex),
-            categorySlug,
-            ...urlElements.slice(insertIndex)
-        ];
-    }
+const BredCrumbBlock: React.FC = () => {
+    const urlElements: string[] = window.location.pathname.split('/').filter(Boolean);
 
     const buildLink = (index: number): string => {
-        const pathParts = urlElements.slice(0, index + 1).filter(el => el !== categorySlug);
-        const path = '/' + pathParts.join('/');
+        const pathParts = urlElements.slice(0, index + 1);
 
-        if (categorySlug && urlElements[index] === categorySlug && categoryId) {
-            return `${path}?categoryId=${categoryId}`;
-        }
-
-        return path;
+        return '/' + pathParts.join('/');
     };
 
 
@@ -49,7 +30,7 @@ const BredCrumbBlock: React.FC<BredCrumbBlockProps> = ({ categorySlug, categoryI
                     {item}
                 </Link>
                     {index < urlElements.length - 1 && (
-                        <span className="mx-3 text-orange-500 text-2xl animate-pulse">|</span>
+                        <span className="mx-3 text-orange-500 text-2xl animate-pulse">{">"}</span>
                     )}
             </span>
             ))}

@@ -63,10 +63,10 @@ const ProductItemPage: React.FC = () => {
     if (!product) return null;
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4">
 
-            <div className="mb-8">
-                <BredCrumbBlock categoryId={product.category.id} categorySlug={product.category.slug}/>
+            <div className="mb-2">
+                <BredCrumbBlock/>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">

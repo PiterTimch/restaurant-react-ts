@@ -29,7 +29,7 @@ const SimpleCard = ({ product }: { product: IProductItem }) => {
             {product.price} ₴
           </span>
                     <Link
-                        to={`/products/${product.slug}?variant=${product.id}`}
+                        to={`/products/${product.category.slug}/${product.slug}?variant=${product.id}`}
                         className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
                     >
                         Хочу
