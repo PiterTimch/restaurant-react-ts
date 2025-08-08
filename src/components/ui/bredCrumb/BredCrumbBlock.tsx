@@ -22,8 +22,6 @@ const BredCrumbBlock: React.FC = () => {
                         hover:from-orange-500 hover:to-orange-300
                         transition-all duration-300
                         hover:scale-105
-                        drop-shadow-[0_0_5px_rgba(255,125,0,0.8)]
-                        hover:drop-shadow-[0_0_10px_rgba(255,150,0,1)]
                     "
                     to={buildLink(index)}
                 >
