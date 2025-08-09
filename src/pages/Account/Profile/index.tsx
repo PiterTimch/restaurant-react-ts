@@ -7,7 +7,11 @@ import {
     TimeIcon,
     UserIcon
 } from "../../../icons";
-import {useChangePasswordMutation, useDeleteAccountMutation} from "../../../services/apiAccount.ts";
+import {
+    useChangePasswordMutation,
+    useDeleteAccountMutation,
+    useHasPasswordQuery
+} from "../../../services/apiAccount.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useState} from "react";
 import {Link, useNavigate} from "react-router";
@@ -16,7 +20,7 @@ import type {ServerError} from "../../../services/types.ts";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 import {useGetLastOrderAddressQuery} from "../../../services/apiOrder.ts";
 interface INewPasswords {
-    oldPassword: string;
+    oldPassword?: string;
     newPassword: string;
     confirmPassword: string
 }
@@ -29,6 +33,7 @@ const ProfilePage : React.FC = () => {
     const [changePassword, {isLoading, isError}] = useChangePasswordMutation();
     const [deleteAccount] = useDeleteAccountMutation();
     const {data: lastAddress, isLoading: isAddressLoading} = useGetLastOrderAddressQuery();
+    const { data: userDataResult, isLoading: isUserDataLoading } = useHasPasswordQuery();
 
     const [form] = Form.useForm<INewPasswords>();
     const setServerErrors = useFormServerErrors(form);
@@ -70,13 +75,20 @@ const ProfilePage : React.FC = () => {
         }
     };
 
-    if (isAddressLoading && isLoading) return <LoadingOverlay />;
+    if (isAddressLoading || isLoading || isUserDataLoading) return <LoadingOverlay />;
 
     return (
         <div className="flex min-h-[500px] items-center justify-center">
             <div className="grid lg:grid-cols-12 grid-cols-12 place-items-center">
                 <div className="min-h-[300px] shadow lg:col-span-10 col-span-10 w-full col-start-2 lg:col-start-2 px-10 place-content-center">
                     <div className="grid lg:grid-cols-5 grid-cols-1 lg:gap-12 gap-y-5">
+
+                        <Link to="/edit-profile" className="lg:!hidden !block mt-5" >
+                            <Button
+                                icon={<PencilIcon />}
+                                className="justify-end"
+                            />
+                        </Link>
 
                         <div className="flex justify-center">
                             <img
@@ -132,10 +144,10 @@ const ProfilePage : React.FC = () => {
                                 </div>
 
 
-                                <Link to="/edit-profile" >
+                                <Link to="/edit-profile" className="!hidden lg:!block">
                                     <Button
                                         icon={<PencilIcon />}
-                                        className="!hidden lg:!block justify-end"
+                                        className="justify-end"
                                     />
                                 </Link>
                             </div>
@@ -175,13 +187,15 @@ const ProfilePage : React.FC = () => {
                     layout="vertical"
                     onFinish={handleChangePassword}
                 >
-                    <Form.Item<INewPasswords>
-                        name="oldPassword"
-                        label={<span className="text-gray-700 dark:text-white font-medium">Старий пароль</span>}
-                        rules={[{ required: true, message: 'Вкажіть старий пароль' }]}
-                    >
-                        <Input.Password className="rounded-lg py-2 px-4 dark:bg-gray-800 dark:text-white" />
-                    </Form.Item>
+                    {userDataResult?.hasPassword && (
+                        <Form.Item<INewPasswords>
+                            name="oldPassword"
+                            label={<span className="text-gray-700 dark:text-white font-medium">Старий пароль</span>}
+                            rules={[{ required: true, message: 'Вкажіть старий пароль' }]}
+                        >
+                            <Input.Password className="rounded-lg py-2 px-4 dark:bg-gray-800 dark:text-white" />
+                        </Form.Item>
+                    )}
 
                     <Form.Item<INewPasswords>
                         name="newPassword"

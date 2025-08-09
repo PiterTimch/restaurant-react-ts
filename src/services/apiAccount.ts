@@ -1,6 +1,6 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
-import type {ILogin, IRegister, IUserEdit} from "./types.ts";
+import type {ILogin, IRegister, IUserEdit, IUserHasPasswordResponse} from "./types.ts";
 //import {jwtDecode} from "jwt-decode";
 import {serialize} from "object-to-formdata";
 import {loginSuccess} from "../store/authSlice.ts";
@@ -54,7 +54,7 @@ const handleAuthSuccess = async (
 export const apiAccount = createApi({
     reducerPath: 'api/account',
     baseQuery: createBaseQuery('Account'),
-    tagTypes: ['Account'],
+    tagTypes: ['Account', 'AccountPassword'],
     endpoints: (builder) => ({
         login: builder.mutation<{token: string}, ILogin>({
             query: (credentials) => ({
@@ -100,7 +100,8 @@ export const apiAccount = createApi({
                 url: 'change-password',
                 method: 'POST',
                 body: data
-            })
+            }),
+            invalidatesTags: ['AccountPassword']
         }),
         register: builder.mutation<{token: string}, IRegister>({
             query: (credentials) => {
@@ -117,7 +118,8 @@ export const apiAccount = createApi({
                 return{
                     url: 'delete',
                     method: 'DELETE',};
-            }
+            },
+            invalidatesTags: ['AccountPassword']
         }),
         editAccount: builder.mutation<{token : string}, IUserEdit>({
             query: (credentials) => {
@@ -128,8 +130,18 @@ export const apiAccount = createApi({
                     method: 'PUT',
                     body: formData,
                 };
-            }
+            },
+            invalidatesTags: ['AccountPassword']
         }),
+        hasPassword: builder.query<IUserHasPasswordResponse, void>({
+            query: () => {
+                return{
+                    url: 'has-password',
+                    method: 'GET'
+                };
+            },
+            providesTags: ['AccountPassword']
+        })
     })
 });
 
@@ -143,4 +155,5 @@ export const {
     useLoginByGoogleMutation,
     useDeleteAccountMutation,
     useEditAccountMutation,
+    useHasPasswordQuery,
 } = apiAccount;

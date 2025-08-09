@@ -150,6 +150,10 @@ export interface IUserEdit {
     roles?: string[];
 }
 
+export interface IUserHasPasswordResponse {
+    hasPassword: boolean;
+}
+
 export interface IUserDelete {
     id: number;
 }

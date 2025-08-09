@@ -14,7 +14,7 @@ import {loginSuccess} from "../../../store/authSlice.ts";
 
 const EditProfilePage : React.FC = () => {
     const {user} = useAppSelector(state => state.auth);
-    const [edit, {isLoading}] = useEditAccountMutation()
+    const [edit, {isLoading, isError, error }] = useEditAccountMutation()
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -98,6 +98,10 @@ const EditProfilePage : React.FC = () => {
                                 >
                                     <Input />
                                 </Form.Item>
+
+                                {isError && typeof error?.data === 'string' && (
+                                    <p className="text-red-500">{error.data}</p>
+                                )}
                             </div>
                         </div>
 
