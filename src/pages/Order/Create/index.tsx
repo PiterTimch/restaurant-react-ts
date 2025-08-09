@@ -128,7 +128,7 @@ const CreateOrderPage : React.FC = () => {
                 className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4"
                 onFinish={handleSubmit}
                 initialValues={{
-                    recipientName: user.name ?? "",
+                    recipientName: user!.name ?? "",
                 }}
             >
                 <Form.Item

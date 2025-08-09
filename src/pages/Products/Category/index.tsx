@@ -1,6 +1,6 @@
 import { useSearchProductQuery } from "../../../services/apiProduct";
 import {useNavigate, useParams, useSearchParams} from "react-router";
-import type {IProductItem, IProductSearchParams} from "../../../services/types.ts";
+import type {IProductItem} from "../../../services/types.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useGetCategoryBySlugQuery} from "../../../services/apiCategory";
 import BredCrumbBlock from "../../../components/ui/bredCrumb/BredCrumbBlock.tsx";

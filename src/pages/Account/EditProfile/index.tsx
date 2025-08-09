@@ -21,17 +21,17 @@ const EditProfilePage : React.FC = () => {
 
     const [form] = Form.useForm<IUserEdit>();
     const initialFormObject = {
-        firstName: user.name.split(" ")[0],
-        lastName: user.name.split(" ")[1],
-        email: user.email,
-        image: user.image,
+        firstName: user!.name.split(" ")[0],
+        lastName: user!.name.split(" ")[1],
+        email: user!.email,
+        image: user!.image,
     }
 
     const onFinish: FormProps<IUserEdit>['onFinish'] = async (values) => {
         try {
             const res = await edit(values);
             console.log(res);
-            dispatch(loginSuccess(res.data.token));
+            dispatch(loginSuccess(res.data!.token));
             navigate('/profile');
         }
         catch (error) {
@@ -54,7 +54,7 @@ const EditProfilePage : React.FC = () => {
                         className="grid grid-cols-1 lg:grid-cols-2 gap-6"
                     >
                         <div className="flex justify-center items-center col-span-1">
-                            <ImageUploadFormItem name="image" label="" initialImage={`${APP_ENV.IMAGES_400_URL}${user.image}`} />
+                            <ImageUploadFormItem name="image" label="" initialImage={`${APP_ENV.IMAGES_400_URL}${user!.image}`} />
                         </div>
 
                         <div className="col-span-1 space-y-4">
@@ -99,8 +99,14 @@ const EditProfilePage : React.FC = () => {
                                     <Input />
                                 </Form.Item>
 
-                                {isError && typeof error?.data === 'string' && (
-                                    <p className="text-red-500">{error.data}</p>
+
+                                {
+                                    //@ts-ignore
+                                    isError && typeof error?.data === 'string' && (
+                                    <p className="text-red-500">{
+                                        //@ts-ignore
+                                        error.data
+                                    }</p>
                                 )}
                             </div>
                         </div>

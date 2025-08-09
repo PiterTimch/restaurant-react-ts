@@ -61,7 +61,7 @@ const ProfilePage : React.FC = () => {
         }
 
         try {
-            await changePassword({ newPassword: values.newPassword, oldPassword: values.oldPassword }).unwrap();
+            await changePassword({ newPassword: values.newPassword, oldPassword: values.oldPassword! }).unwrap();
             console.log("Пароль успішно змінено");
             setIsOpenPasswordForm(false);
         } catch (err) {
@@ -92,7 +92,7 @@ const ProfilePage : React.FC = () => {
 
                         <div className="flex justify-center">
                             <img
-                                src={user!.image ? `${APP_ENV.IMAGES_400_URL}${user.image}` : '/images/user/default.png'}
+                                src={user!.image ? `${APP_ENV.IMAGES_400_URL}${user!.image}` : '/images/user/default.png'}
                                 alt={user!.name}
                                 className="lg:w-[180px] w-[300px] object-cover rounded-full m-5"
                             />
