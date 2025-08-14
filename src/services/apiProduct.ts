@@ -1,6 +1,6 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
 import type {
-    IIngredient,
+    IIngredient, IIngredientCreate,
     IProductCreate,
     IProductItem,
     IProductSearchParams,
@@ -28,7 +28,7 @@ const createQueryString = (params: Record<string, any>) => {
 export const apiProduct = createApi({
     reducerPath: 'api/products',
     baseQuery: createBaseQuery('Products'),
-    tagTypes: ['Product', 'Products'],
+    tagTypes: ['Product', 'Products', 'Ingredients'],
     endpoints: (builder) => ({
         getAllProducts: builder.query<IProductItem[], void>({
             query: () => 'list',
@@ -46,7 +46,8 @@ export const apiProduct = createApi({
             query: () => 'sizes'
         }),
         getAllIngredients: builder.query<IIngredient[], void>({
-            query: () => 'ingredients'
+            query: () => 'ingredients',
+            providesTags: ['Ingredients']
         }),
         createProduct: builder.mutation<IProductItem, IProductCreate>({
             query: (newCategory) => {
@@ -62,6 +63,21 @@ export const apiProduct = createApi({
                 }
             },
             invalidatesTags: ['Products'],
+        }),
+        createIngredient: builder.mutation<void, IIngredientCreate>({
+            query: (newIngredient) => {
+                try {
+                    const formData = serialize(newIngredient);
+                    return {
+                        url: 'ingredients',
+                        method: 'POST',
+                        body: formData,
+                    };
+                } catch {
+                    throw new Error('Error Create ingredient');
+                }
+            },
+            invalidatesTags: ['Ingredients']
         }),
         searchProduct: builder.query<ISearchResult<IProductItem>, IProductSearchParams>({
             query: (params) => {
@@ -85,4 +101,5 @@ export const {
     useGetProductBySlugQuery,
     useCreateProductMutation,
     useSearchProductQuery,
+    useCreateIngredientMutation
 } = apiProduct;

@@ -77,6 +77,11 @@ export interface IIngredient {
     image: string;
 }
 
+export interface IIngredientCreate {
+    name: string;
+    imageFile: string;
+}
+
 export interface IProductVariant {
     id: number;
     weight: number;

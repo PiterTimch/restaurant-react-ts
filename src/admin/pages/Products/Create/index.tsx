@@ -7,6 +7,8 @@ import {useState} from "react";
 import DragDropUpload from "../../../../components/ui/form/DragDropUpload.tsx";
 import {Button, Form, Input, InputNumber, Select, message} from "antd";
 import {useFormServerErrors} from "../../../../utilities/useFormServerErrors.ts";
+import IngredientCreateModal from "../../../../components/ui/form/IngredientCreateModal.tsx";
+import slugify from "slugify";
 
 const ProductCreatePage = () => {
     const [images, setImages] = useState<any[]>([]);
@@ -18,6 +20,8 @@ const ProductCreatePage = () => {
 
     const [form] = Form.useForm<IProductCreate>();
     const setServerErrors = useFormServerErrors(form);
+
+    const [isIngredientModalVisible, setIngredientModalVisible] = useState(false);
 
     const [selectedIngredients, setSelectedIngredients] = useState<number[]>([]);
 
@@ -49,6 +53,13 @@ const ProductCreatePage = () => {
         }
     };
 
+    const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+        const name = e.target.value;
+        form.setFieldsValue({
+            slug: slugify(name.toLowerCase()),
+        });
+    };
+
     return (
         <div className="container mt-5 bg-white dark:bg-gray-900 rounded-lg p-6">
             <h2 className="mb-4 text-2xl font-bold text-gray-800 dark:text-white/90">Створення продукту</h2>
@@ -77,7 +88,7 @@ const ProductCreatePage = () => {
 
                     <div className="border border-gray-200 dark:border-gray-700 rounded p-4 dark:bg-gray-800">
                         <Form.Item name="name" label="Назва" rules={[{required: true, message: "Вкажіть назву продукту"}]} className="dark:text-white/90">
-                            <Input className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-3 dark:bg-gray-700 dark:text-white/90" />
+                            <Input onChange={handleChange} className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-3 dark:bg-gray-700 dark:text-white/90" />
                         </Form.Item>
 
                         <Form.Item name="slug" label="Слаг" rules={[{required: true, message: "Вкажіть слаг"}]} className="dark:text-white/90">
@@ -137,6 +148,17 @@ const ProductCreatePage = () => {
                                 </div>
 
                             ))}
+                            <Button
+                                type="primary"
+                                onClick={() => setIngredientModalVisible(true)}
+                            >
+                                Додати інгредієнт
+                            </Button>
+
+                            <IngredientCreateModal
+                                visible={isIngredientModalVisible}
+                                onClose={() => setIngredientModalVisible(false)}
+                            />
                         </div>
                     </Form.Item>
                 </div>

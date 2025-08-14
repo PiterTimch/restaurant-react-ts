@@ -52,14 +52,6 @@ const CategoryTableItem: React.FC<ProductTableItemProps> = ({ prod }) => {
                 <TableCell className="py-3 text-gray-500 dark:text-gray-400">{prod.category.name}</TableCell>
                 <TableCell className="py-3">{renderImage(prod.productImages?.[0]?.name)}</TableCell>
 
-                <TableCell className="py-3">
-                    {!hasVariants && (
-                        <Space size="middle">
-                            <Button icon={<EditOutlined />} className="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700" />
-                            <Button danger icon={<CloseCircleFilled />} />
-                        </Space>
-                    )}
-                </TableCell>
             </TableRow>
 
             {hasVariants && open && (

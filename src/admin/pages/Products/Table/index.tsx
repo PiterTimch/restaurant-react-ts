@@ -45,7 +45,6 @@ const ProductTablePage: React.FC = () => {
                                 <TableCell isHeader className="py-3 text-start text-gray-800 dark:text-white/90">Price</TableCell>
                                 <TableCell isHeader className="py-3 text-start text-gray-800 dark:text-white/90">Category</TableCell>
                                 <TableCell isHeader className="py-3 text-start text-gray-800 dark:text-white/90">Image</TableCell>
-                                <TableCell isHeader className="py-3 text-start text-gray-800 dark:text-white/90">Action</TableCell>
                             </TableRow>
                         </TableHeader>
 
