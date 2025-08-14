@@ -29,6 +29,10 @@ export interface IChangePasswordRequest {
     newPassword: string;
 }
 
+export interface IValidateResetToken {
+    isValid: boolean;
+}
+
 const handleAuthSuccess = async (
     queryFulfilled: Promise<{ data: {token: string} }>,
     dispatch: Dispatch,
@@ -82,7 +86,7 @@ export const apiAccount = createApi({
                 body: data
             })
         }),
-        validateResetToken: builder.query<{isValid: boolean}, IValidateTokenRequest>({
+        validateResetToken: builder.query<IValidateResetToken, IValidateTokenRequest>({
             query: (params) => ({
                 url: 'validate-reset-token',
                 params

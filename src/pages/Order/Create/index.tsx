@@ -186,14 +186,20 @@ const CreateOrderPage : React.FC = () => {
                         disabled={!selectedCityId}
                         placeholder="Оберіть відділення"
                         onSelect={(value) => setSelectedDepartmentId(value)}
+                        showSearch
+                        filterOption={(input, option) => {
+                            const label = (option?.label ?? '').toString().toLowerCase();
+                            return label.includes(input.toLowerCase());
+                        }}
                         options={
                             departments?.map((dep) => ({
                                 value: dep.id,
-                                label: dep.name,
+                                label: dep.name
                             })) ?? []
                         }
                     />
                 </Form.Item>
+
 
                 <Form.Item label="Тип оплати" required>
                     <Select
