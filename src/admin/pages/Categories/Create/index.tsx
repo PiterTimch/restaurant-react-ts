@@ -5,6 +5,7 @@ import {useCreateCategoryMutation} from "../../../../services/apiCategory.ts";
 import {useNavigate} from "react-router";
 import LoadingOverlay from "../../../../components/ui/loading/LoadingOverlay.tsx";
 import { useFormServerErrors } from "../../../../utilities/useFormServerErrors.ts";
+import slugify from "slugify";
 
 const CategoriesCreatePage: React.FC = () => {
 
@@ -31,6 +32,13 @@ const CategoriesCreatePage: React.FC = () => {
         }
     };
 
+    const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+        const name = e.target.value;
+        form.setFieldsValue({
+            slug: slugify(name.toLowerCase()),
+        });
+    };
+
     return (
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
             {isLoading && <LoadingOverlay />}
@@ -50,7 +58,7 @@ const CategoriesCreatePage: React.FC = () => {
                         rules={[{ required: true, message: 'Вкажіть назву категорії' }]}
                         className="dark:text-white/90"
                     >
-                        <Input className="dark:bg-gray-700 dark:border-gray-600 dark:text-white/90" />
+                        <Input onChange={handleChange} className="dark:bg-gray-700 dark:border-gray-600 dark:text-white/90" />
                     </Form.Item>
 
                     <Form.Item<ICategoryCreate>

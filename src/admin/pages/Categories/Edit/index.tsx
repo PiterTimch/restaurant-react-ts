@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router";
 import LoadingOverlay from "../../../../components/ui/loading/LoadingOverlay.tsx";
 import {useFormServerErrors} from "../../../../utilities/useFormServerErrors.ts";
 import {APP_ENV} from "../../../../env";
+import slugify from "slugify";
 
 const CategoriesEditPage: React.FC = () => {
     const navigate = useNavigate();
@@ -33,6 +34,13 @@ const CategoriesEditPage: React.FC = () => {
                 message.error("Сталася помилка при зміні категорії");
             }
         }
+    };
+
+    const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+        const name = e.target.value;
+        form.setFieldsValue({
+            slug: slugify(name.toLowerCase()),
+        });
     };
 
     if (isLoadingCategory) return <p className="text-gray-600 dark:text-gray-400">Завантаження категорії...</p>;
@@ -63,7 +71,7 @@ const CategoriesEditPage: React.FC = () => {
                         rules={[{ required: true, message: 'Вкажіть назву категорії' }]}
                         className="dark:text-white/90"
                     >
-                        <Input className="dark:bg-gray-700 dark:border-gray-600 dark:text-white/90" />
+                        <Input onChange={handleChange} className="dark:bg-gray-700 dark:border-gray-600 dark:text-white/90" />
                     </Form.Item>
 
                     <Form.Item<ICategoryEdit>
