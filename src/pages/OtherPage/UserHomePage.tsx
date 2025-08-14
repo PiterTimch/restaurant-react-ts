@@ -37,17 +37,17 @@ const UserHomePage: React.FC = () => {
                     </p>
                 )}
                 {categories && (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                    <div className="flex overflow-x-auto space-x-4 py-2">
                         {categories.map((cat) => (
                             <Link
                                 to={`/products/${cat.slug}`}
                                 key={cat.id}
-                                className="group relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition"
+                                className="w-[200px] flex-shrink-0 relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition"
                             >
                                 <img
                                     src={`${APP_ENV.IMAGES_400_URL}${cat.image}`}
                                     alt={cat.name}
-                                    className="w-full h-48 object-cover transform group-hover:scale-105 transition"
+                                    className="w-full h-48 object-cover transform hover:scale-105 transition"
                                 />
                                 <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-3 text-white text-lg font-medium">
                                     {cat.name}
